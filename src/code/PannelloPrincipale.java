@@ -92,7 +92,16 @@ public class PannelloPrincipale implements Initializable {
 
     @FXML
     void buttonReset(ActionEvent event) {
+        tree.deleteTree();
+        pane.getChildren().clear();
 
+        // Reimposta le variabili allo stato iniziale
+        indici = -1;
+        selectedPallino = null;
+        tree = new Tree();
+
+        // Avvia nuovamente la scena
+        onStart();
     }
 
     @Override

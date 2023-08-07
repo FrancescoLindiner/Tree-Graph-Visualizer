@@ -13,4 +13,8 @@ public class Tree {
     public void addNode(Node node) {
         tree.add(node);
     }
+
+    public void deleteTree() {
+        tree.clear();
+    }
 }
