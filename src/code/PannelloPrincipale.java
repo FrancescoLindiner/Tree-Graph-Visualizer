@@ -16,7 +16,7 @@ public class PannelloPrincipale implements Initializable {
     @FXML
     private Pane pane;
 
-    static int indici=-1;
+    static int indici=0;
     private Circle selectedPallino; // Variabile per memorizzare il pallino selezionato
     Tree tree = new Tree();
 
@@ -51,16 +51,22 @@ public class PannelloPrincipale implements Initializable {
         Circle node = new Circle(20, Color.BLUE);
         node.setCenterX(selectedPallino.getCenterX()-70);
         node.setCenterY(selectedPallino.getCenterY()+40);
-        Node figlio = new Node(indici++);
+        Node figlio = new Node(++indici);
         tree.addNode(figlio);
+        figlio.setFiglioSx(figlio, indici);
         pane.getChildren().add(node);
         node.setOnMouseClicked(e -> {
-            System.out.println("Hai cliccato il la radice " + figlio.getIndiceNodo());
+            System.out.println("Hai cliccato il nodo " + figlio.getIndiceNodo());
+            System.out.println("Ha figli " + figlio.getPuntatoreFiglioDx());
+            System.out.println("Ha figli " + figlio.getPuntatoreFiglioSx());
+
             node.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
             selectedPallino = node;
         });
 
+
+        // Disegna la linea che connette i nodi
         Line connectionLine = new Line(
             selectedPallino.getCenterX(), selectedPallino.getCenterY(),
             node.getCenterX(), node.getCenterY()
@@ -70,19 +76,22 @@ public class PannelloPrincipale implements Initializable {
 
     @FXML
     void buttonInsertRightNode(ActionEvent event) {
-        Circle node = new Circle(20, Color.BLUE);
+        Circle node = new Circle(20, Color.BLUE); // Crea il pallino colorato
         node.setCenterX(selectedPallino.getCenterX()+70);
         node.setCenterY(selectedPallino.getCenterY()+40);
-        Node figlio = new Node(indici++);
-        tree.addNode(figlio);
-        pane.getChildren().add(node);
+        Node figlio = new Node(++indici); // Crea il nodo
+        tree.addNode(figlio); // Lo aggiunge all'albero
+        figlio.setFiglioDx(figlio, indici);
+        pane.getChildren().add(node); // Lo disegna nello schermo
         node.setOnMouseClicked(e -> {
-            System.out.println("Hai cliccato il la radice " + figlio.getIndiceNodo());
+            System.out.println("Hai cliccato il nodo " + figlio.getIndiceNodo());
             node.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
             selectedPallino = node;
         });
 
+
+        // Disegna la linea che connette i nodi
         Line connectionLine = new Line(
             selectedPallino.getCenterX(), selectedPallino.getCenterY(),
             node.getCenterX(), node.getCenterY()
