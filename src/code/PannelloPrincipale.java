@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
 public class PannelloPrincipale implements Initializable {
 
@@ -60,6 +61,11 @@ public class PannelloPrincipale implements Initializable {
             selectedPallino = node;
         });
 
+        Line connectionLine = new Line(
+            selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+            node.getCenterX(), node.getCenterY()
+        );
+        pane.getChildren().add(connectionLine);
     }
 
     @FXML
@@ -76,6 +82,12 @@ public class PannelloPrincipale implements Initializable {
             selectedPallino.setFill(Color.BLUE);
             selectedPallino = node;
         });
+
+        Line connectionLine = new Line(
+            selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+            node.getCenterX(), node.getCenterY()
+        );
+        pane.getChildren().add(connectionLine);
     }
 
     @FXML
