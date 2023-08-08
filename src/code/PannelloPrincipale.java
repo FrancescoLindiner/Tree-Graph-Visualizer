@@ -28,7 +28,7 @@ public class PannelloPrincipale implements Initializable {
     @FXML
     private Slider slider;
 
-    private double currentZoom = 1.0; // Valore di zoom iniziale
+    //private double currentZoom = 1.0; // Valore di zoom iniziale
 
     static int indici = 0;
     private Circle selectedPallino; // Variabile per memorizzare il pallino selezionato
@@ -55,6 +55,7 @@ public class PannelloPrincipale implements Initializable {
     }
 
     DFS dfs = new DFS();
+    BFS bfs = new BFS();
 
     @FXML
     void buttonDFS(ActionEvent event) {
@@ -64,7 +65,8 @@ public class PannelloPrincipale implements Initializable {
 
     @FXML
     void buttonBFS(ActionEvent event) {
-
+        log.appendText("---------------------\nStarting BFS...\n");
+        bfs.executeBFS(tree.getRoot(), tree, slider.valueProperty().doubleValue(), log);
     }
 
     @FXML
