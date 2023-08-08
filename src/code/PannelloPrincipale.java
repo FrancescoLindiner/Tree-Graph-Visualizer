@@ -58,7 +58,7 @@ public class PannelloPrincipale implements Initializable {
 
     @FXML
     void buttonDFS(ActionEvent event) {
-        log.appendText("-----------------\nRicerca iniziata\n");
+        log.appendText("---------------------\nStarting DFS...\n");
         dfs.executeDFS(tree.getRoot(), tree, slider.valueProperty().doubleValue(), log);
     }
 
@@ -69,6 +69,14 @@ public class PannelloPrincipale implements Initializable {
 
     @FXML
     void buttonInsertLeftNode(ActionEvent event) {
+        if (selectedNode==null) {
+            log.appendText("First select a node\nwhere to insert a node\n");
+            return;
+        }
+        if(selectedNode.getPuntatoreFiglioSx()!=0) {
+            log.appendText("The node has already\na left children\n");
+            return;
+        }
         Circle node = new Circle(20, Color.BLUE);
         node.setCenterX(selectedPallino.getCenterX() - 70);
         node.setCenterY(selectedPallino.getCenterY() + 40);
@@ -99,6 +107,14 @@ public class PannelloPrincipale implements Initializable {
 
     @FXML
     void buttonInsertRightNode(ActionEvent event) {
+        if (selectedNode==null) {
+            log.appendText("First select a node\nwhere to insert a node\n");
+            return;
+        }
+        if(selectedNode.getPuntatoreFiglioDx()!=0) {
+            log.appendText("The node has already\na right children\n");
+            return;
+        }
         Circle node = new Circle(20, Color.BLUE); // Crea il pallino colorato
         node.setCenterX(selectedPallino.getCenterX() + 70);
         node.setCenterY(selectedPallino.getCenterY() + 40);
@@ -132,8 +148,7 @@ public class PannelloPrincipale implements Initializable {
         tree.deleteTree();
         pane.getChildren().clear();
         log.clear();
-        pane.getChildren().add(log); // Dovuto aggiungere altrimenti quando cliccavo il tasto reset spariva la text
-                                     // area
+        
 
         // Reimposta le variabili allo stato iniziale
         indici = 0;
@@ -153,7 +168,7 @@ public class PannelloPrincipale implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         onStart();
-        pane.setOnScroll(event -> {
+        /*pane.setOnScroll(event -> {
             if (event.isControlDown()) { // Controlla se il tasto Ctrl è premuto
                 double zoomFactor = 1.05; // Fattore di zoom (puoi regolare questo valore)
 
@@ -178,7 +193,6 @@ public class PannelloPrincipale implements Initializable {
 
                 event.consume(); // Impedisce la propagazione dell'evento
             }
-        });
-        
+        });*/        
     }
 }

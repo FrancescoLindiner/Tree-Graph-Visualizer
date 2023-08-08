@@ -31,9 +31,9 @@
          <effect>
             <DropShadow />
          </effect></Button>
-      <TextArea fx:id="log" layoutX="696.0" layoutY="56.0" prefHeight="587.0" prefWidth="200.0" promptText="Insert nodes and start a research" style="-fx-background-color: white;">
+      <TextArea fx:id="log" layoutX="696.0" layoutY="56.0" prefHeight="587.0" prefWidth="200.0" promptText="Select a node and insert a node" style="-fx-background-color: white;">
          <font>
-            <Font name="Arial Rounded MT Bold" size="18.0" />
+            <Font name="Arial Rounded MT Bold" size="17.0" />
          </font>
       </TextArea>
       <ScrollPane fx:id="scrollPane" layoutX="2.0" layoutY="55.0">
