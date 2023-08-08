@@ -6,6 +6,9 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -16,23 +19,35 @@ public class PannelloPrincipale implements Initializable {
     @FXML
     private Pane pane;
 
-    static int indici=0;
+    @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
+    private TextArea log;
+
+    @FXML
+    private Slider slider;
+
+    private double currentZoom = 1.0; // Valore di zoom iniziale
+
+    static int indici = 0;
     private Circle selectedPallino; // Variabile per memorizzare il pallino selezionato
     private Node selectedNode; // Variabile per memorizzare il nodo selezionato
     Tree tree = new Tree();
 
     public void onStart() {
         Circle pallino = new Circle(20, Color.BLUE);
-        pallino.setCenterX(450);
-        pallino.setCenterY(50);
+        pallino.setCenterX(300);
+        pallino.setCenterY(40);
         pane.getChildren().add(pallino);
- 
+
         Node root = new Node(0, pallino);
         tree.addNode(root);
 
         pallino.setOnMouseClicked(event -> {
-            System.out.println("Hai cliccato il la radice " + root.getIndiceNodo());
-            System.out.println("La radice ha figli con indice: " + root.getPuntatoreFiglioSx() + " e " + root.getPuntatoreFiglioDx());
+            log.appendText("Root " + root.getIndiceNodo() + "\n");
+            log.appendText(
+                    "Root's childern: " + root.getPuntatoreFiglioSx() + " - " + root.getPuntatoreFiglioDx() + "\n");
             pallino.setFill(Color.GREEN);
             selectedPallino = pallino;
             selectedNode = root;
@@ -43,8 +58,8 @@ public class PannelloPrincipale implements Initializable {
 
     @FXML
     void buttonDFS(ActionEvent event) {
-        dfs.executeDFS(tree.getRoot(), tree);
-        System.out.println(tree.getRoot().toString());
+        log.appendText("-----------------\nRicerca iniziata\n");
+        dfs.executeDFS(tree.getRoot(), tree, slider.valueProperty().doubleValue(), log);
     }
 
     @FXML
@@ -53,19 +68,20 @@ public class PannelloPrincipale implements Initializable {
     }
 
     @FXML
-    void buttonInsertLeftNode(ActionEvent event) { 
+    void buttonInsertLeftNode(ActionEvent event) {
         Circle node = new Circle(20, Color.BLUE);
-        node.setCenterX(selectedPallino.getCenterX()-70);
-        node.setCenterY(selectedPallino.getCenterY()+40);
+        node.setCenterX(selectedPallino.getCenterX() - 70);
+        node.setCenterY(selectedPallino.getCenterY() + 40);
         Node figlio = new Node(++indici, node);
         tree.addNode(figlio);
         selectedNode.setFiglioSx(figlio.getIndiceNodo());
         pane.getChildren().add(node);
+        log.appendText("Add node " + figlio.getIndiceNodo() + "\n");
         node.setOnMouseClicked(e -> {
             selectedNode = figlio;
-            System.out.println("Hai cliccato il nodo da sinsitra" + figlio.getIndiceNodo());
-            System.out.println("Ha figli " + selectedNode.getPuntatoreFiglioSx());
-            System.out.println("Ha figli " + selectedNode.getPuntatoreFiglioDx());
+            log.appendText("Nodo " + figlio.getIndiceNodo() + "\n");
+            log.appendText("Node's childrens " + selectedNode.getPuntatoreFiglioSx() + " - "
+                    + selectedNode.getPuntatoreFiglioDx() + "\n");
 
             node.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
@@ -76,26 +92,27 @@ public class PannelloPrincipale implements Initializable {
 
         // Disegna la linea che connette i nodi
         Line connectionLine = new Line(
-            selectedPallino.getCenterX(), selectedPallino.getCenterY(),
-            node.getCenterX(), node.getCenterY()
-        );
+                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+                node.getCenterX(), node.getCenterY());
         pane.getChildren().add(connectionLine);
     }
 
     @FXML
     void buttonInsertRightNode(ActionEvent event) {
         Circle node = new Circle(20, Color.BLUE); // Crea il pallino colorato
-        node.setCenterX(selectedPallino.getCenterX()+70);
-        node.setCenterY(selectedPallino.getCenterY()+40);
+        node.setCenterX(selectedPallino.getCenterX() + 70);
+        node.setCenterY(selectedPallino.getCenterY() + 40);
         Node figlio = new Node(++indici, node); // Crea il nodo
         tree.addNode(figlio); // Lo aggiunge all'albero
         selectedNode.setFiglioDx(figlio.getIndiceNodo());
         pane.getChildren().add(node); // Lo disegna nello schermo
+        log.appendText("Add node " + figlio.getIndiceNodo() + "\n");
         node.setOnMouseClicked(e -> {
             selectedNode = figlio;
-            System.out.println("Hai cliccato il nodo da destra" + figlio.getIndiceNodo());
-            System.out.println("Ha figli " + selectedNode.getPuntatoreFiglioSx());
-            System.out.println("Ha figli " + selectedNode.getPuntatoreFiglioDx());
+            log.appendText("Nodo " + figlio.getIndiceNodo() + "\n");
+            log.appendText("Node's childrens " + selectedNode.getPuntatoreFiglioSx() + " - "
+                    + selectedNode.getPuntatoreFiglioDx() + "\n");
+
             node.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
             selectedPallino = node;
@@ -105,9 +122,8 @@ public class PannelloPrincipale implements Initializable {
 
         // Disegna la linea che connette i nodi
         Line connectionLine = new Line(
-            selectedPallino.getCenterX(), selectedPallino.getCenterY(),
-            node.getCenterX(), node.getCenterY()
-        );
+                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+                node.getCenterX(), node.getCenterY());
         pane.getChildren().add(connectionLine);
     }
 
@@ -115,6 +131,9 @@ public class PannelloPrincipale implements Initializable {
     void buttonReset(ActionEvent event) {
         tree.deleteTree();
         pane.getChildren().clear();
+        log.clear();
+        pane.getChildren().add(log); // Dovuto aggiungere altrimenti quando cliccavo il tasto reset spariva la text
+                                     // area
 
         // Reimposta le variabili allo stato iniziale
         indici = 0;
@@ -126,9 +145,40 @@ public class PannelloPrincipale implements Initializable {
         onStart();
     }
 
+    @FXML
+    void buttonRandom(ActionEvent event) {
+
+    }
+
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         onStart();
-    }
+        pane.setOnScroll(event -> {
+            if (event.isControlDown()) { // Controlla se il tasto Ctrl è premuto
+                double zoomFactor = 1.05; // Fattore di zoom (puoi regolare questo valore)
 
+                if (event.getDeltaY() < 0) {
+                    // Zoom out
+                    zoomFactor = 1 / zoomFactor;
+                }
+
+                // Effettua il zoom all'interno del pannello
+                pane.setScaleX(pane.getScaleX() * zoomFactor);
+                pane.setScaleY(pane.getScaleY() * zoomFactor);
+
+                // Aggiorna lo stato del zoom corrente
+                currentZoom *= zoomFactor;
+
+                // Impedisce il passaggio a livelli di zoom troppo piccoli o grandi
+                if (currentZoom < 0.1) {
+                    currentZoom = 0.1;
+                } else if (currentZoom > 10) {
+                    currentZoom = 10;
+                }
+
+                event.consume(); // Impedisce la propagazione dell'evento
+            }
+        });
+        
+    }
 }
