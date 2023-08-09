@@ -41,10 +41,15 @@ public class PannelloPrincipale implements Initializable {
         Circle pallino = new Circle(20, Color.BLUE);
         pallino.setCenterX(350);
         pallino.setCenterY(40);
-        pane.getChildren().add(pallino);
 
         Node root = new Node(0, pallino);
         tree.addNode(root);
+
+        Text numberText = new Text("0");
+        numberText.setFill(Color.WHITE);
+        numberText.setX(pallino.getCenterX() - 5);
+        numberText.setY(pallino.getCenterY() + 5);
+        pane.getChildren().addAll(pallino, numberText);
 
         pallino.setOnMouseClicked(event -> {
             log.appendText("Root " + root.getIndiceNodo() + "\n");
@@ -195,6 +200,8 @@ public class PannelloPrincipale implements Initializable {
     @FXML
     void buttonRandom(ActionEvent event) {
         int randomDim = random.nextInt(6) + 5;
+        selectedNode = tree.getRoot();
+        selectedPallino = selectedNode.circle;
         generateLeftNode();
         generateRightNode();
 
@@ -202,11 +209,12 @@ public class PannelloPrincipale implements Initializable {
             Node node = tree.selectRandomNode();
             selectedNode = node;
             selectedPallino = selectedNode.circle;
-            int randomInt = random.nextInt(2);
-            if (randomInt == 0) {
+            if (random.nextInt(2) == 0 && selectedNode.getPuntatoreFiglioSx()==0) {
                 generateLeftNode();
             } else {
-                generateRightNode();
+                if (selectedNode.getPuntatoreFiglioDx()==0) {
+                    generateRightNode();
+                }                
             }
         }
     }
