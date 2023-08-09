@@ -7,7 +7,7 @@ public class Node {
     
     private int indiceNodo;
     private int puntatoreFiglioSx, puntatoreFiglioDx;
-    private Circle circle;
+    Circle circle;
 
     public Node(int indiceNodo, Circle circle) {
         this.indiceNodo = indiceNodo;

@@ -1,6 +1,7 @@
 package code;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Tree {
 
@@ -40,5 +41,17 @@ public class Tree {
             }
         }
         return null;
+    }
+
+    public Node selectRandomNode() {
+        Random rand = new Random();
+        Node randomNode = null;
+        do {
+            int indiceCasuale = rand.nextInt(tree.size());
+            randomNode = tree.get(indiceCasuale);
+        } while ((randomNode.getIndiceNodo() == getRoot().getIndiceNodo()) &&
+                (randomNode.getPuntatoreFiglioDx() == 0 || randomNode.getPuntatoreFiglioSx() == 0));
+
+        return randomNode;
     }
 }

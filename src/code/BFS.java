@@ -22,9 +22,7 @@ public class BFS {
                 return;
             }
 
-            System.out.println("Coda prima della rimossione " + coda);
             Node node = coda.removeFirst();
-            System.out.println("Coda dopo della rimossione " + coda);
 
             if (node != null) {
                 log.appendText("Node visited " + node.getIndiceNodo() + "\n");

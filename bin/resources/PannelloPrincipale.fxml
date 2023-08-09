@@ -19,15 +19,15 @@
          <effect>
             <DropShadow />
          </effect></Button>
-      <Button fx:id="button" layoutX="14.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
+      <Button fx:id="button" layoutX="15.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
          <effect>
             <DropShadow />
          </effect></Button>
-      <Button fx:id="button" layoutX="569.0" layoutY="4.0" mnemonicParsing="false" onAction="#buttonBFS" prefHeight="45.0" prefWidth="78.0" text="BFS">
+      <Button fx:id="button" layoutX="600.0" layoutY="4.0" mnemonicParsing="false" onAction="#buttonBFS" prefHeight="45.0" prefWidth="78.0" text="BFS">
          <effect>
             <DropShadow />
          </effect></Button>
-      <Button fx:id="button" layoutX="243.0" layoutY="4.0" mnemonicParsing="false" onAction="#buttonDFS" prefHeight="45.0" prefWidth="78.0" text="DFS">
+      <Button fx:id="button" layoutX="250.0" layoutY="4.0" mnemonicParsing="false" onAction="#buttonDFS" prefHeight="45.0" prefWidth="78.0" text="DFS">
          <effect>
             <DropShadow />
          </effect></Button>
@@ -48,5 +48,15 @@
             <DropShadow />
          </effect>
       </Button>
+      <Text layoutX="693.0" layoutY="661.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0.3 s">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Text>
+      <Text layoutX="846.0" layoutY="661.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10 s">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Text>
    </children>
 </Pane>
