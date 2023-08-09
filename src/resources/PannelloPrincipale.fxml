@@ -1,61 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: grey;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipale">
+<Pane fx:id="paneFirstScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipale">
    <children>
-      <Button fx:id="button" layoutX="480.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertRightNode" prefHeight="45.0" prefWidth="178.0" text="INSERT RIGHT NODE">
-         <effect>
-            <DropShadow />
-         </effect></Button>
-      <Button fx:id="button" layoutX="282.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertLeftNode" prefHeight="45.0" prefWidth="178.0" text="INSERT LEFT NODE">
-         <effect>
-            <DropShadow />
-         </effect></Button>
-      <Button fx:id="button" layoutX="15.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
-         <effect>
-            <DropShadow />
-         </effect></Button>
-      <Button fx:id="button" layoutX="600.0" layoutY="4.0" mnemonicParsing="false" onAction="#buttonBFS" prefHeight="45.0" prefWidth="78.0" text="BFS">
-         <effect>
-            <DropShadow />
-         </effect></Button>
-      <Button fx:id="button" layoutX="250.0" layoutY="4.0" mnemonicParsing="false" onAction="#buttonDFS" prefHeight="45.0" prefWidth="78.0" text="DFS">
-         <effect>
-            <DropShadow />
-         </effect></Button>
-      <TextArea fx:id="log" layoutX="696.0" layoutY="56.0" prefHeight="587.0" prefWidth="200.0" promptText="Select a node and insert a node" style="-fx-background-color: white;">
+      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#4790d4e0" height="63.0" layoutX="341.0" layoutY="217.0" stroke="BLACK" strokeType="INSIDE" width="218.0" />
+      <Text layoutX="359.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select an option">
          <font>
-            <Font name="Arial Rounded MT Bold" size="17.0" />
+            <Font name="Arial Rounded MT Bold" size="23.0" />
          </font>
-      </TextArea>
-      <ScrollPane fx:id="scrollPane" layoutX="2.0" layoutY="55.0">
-         <content>
-            <Pane fx:id="pane" prefHeight="586.0" prefWidth="700.0" style="-fx-background-color: white;" />
-         </content>
-      </ScrollPane>
-      <Slider fx:id="slider" layoutX="696.0" layoutY="661.0" max="10.0" min="0.3" prefHeight="28.0" prefWidth="178.0" value="1.0" />
-      <Text layoutX="763.0" layoutY="663.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed" />
-      <Button fx:id="button" layoutX="130.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonRandom" prefHeight="45.0" prefWidth="131.0" text="RANDOM">
+      </Text>
+      <Button fx:id="buttonGraph" layoutX="539.0" layoutY="319.0" mnemonicParsing="false" onAction="#buttonGraph" prefHeight="63.0" prefWidth="114.0" text="GRAPH">
          <effect>
             <DropShadow />
          </effect>
       </Button>
-      <Text layoutX="693.0" layoutY="661.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0.3 s">
+      <Button fx:id="buttonTree" layoutX="245.0" layoutY="319.0" mnemonicParsing="false" onAction="#buttonTree" prefHeight="63.0" prefWidth="114.0" text="TREE">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <Rectangle id="rectangle" fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#4790d4e0" height="63.0" layoutX="226.0" layoutY="9.0" stroke="BLACK" strokeType="INSIDE" width="446.0" />
+      <Text fx:id="title" layoutX="233.0" layoutY="53.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Tree and graph visualizer">
          <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Text>
-      <Text layoutX="846.0" layoutY="661.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10 s">
-         <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="Arial Rounded MT Bold" size="35.0" />
          </font>
       </Text>
    </children>

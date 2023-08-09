@@ -3,3 +3,33 @@
     -fx-font-weight: bold;
     -fx-font-size: 15;
 }
+
+#buttonTree {
+    -fx-background-color: lightblue;
+    -fx-font-weight: bold;
+    -fx-font-size: 15;
+}
+
+#buttonGraph {
+    -fx-background-color: lightblue;
+    -fx-font-weight: bold;
+    -fx-font-size: 15;
+}
+
+#rectangle {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+/*
+#paneFirstScreen {
+    -fx-background-image: url('img/wallpaper.jpg');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: right right;
+}*/
+
+#title {
+    -fx-background-color: lightblue;
+    -fx-padding: 10px;
+}
