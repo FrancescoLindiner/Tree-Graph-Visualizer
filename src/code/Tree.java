@@ -60,17 +60,11 @@ public class Tree {
         Node father = getFather(selectedNode);
 
         if (father.getPuntatoreFiglioDx()==selectedNode.getIndiceNodo()) {
-            if (father.getPuntatoreFiglioSx()==0) {
-                return true;
-            }
             Node leftChildern = tree.get(father.getPuntatoreFiglioSx());
             if (leftChildern.getPuntatoreFiglioDx()==0) {
                 return true;
             }
         } else {
-            if (father.getPuntatoreFiglioDx()==0) {
-                return true;
-            }
             Node rightChildern = tree.get(father.getPuntatoreFiglioDx());
             if (rightChildern.getPuntatoreFiglioSx()==0) {
                 return true;

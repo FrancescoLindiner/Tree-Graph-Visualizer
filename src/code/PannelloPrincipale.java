@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class PannelloPrincipale implements Initializable {
 
@@ -134,7 +137,7 @@ public class PannelloPrincipale implements Initializable {
         Node figlio = new Node(++indici, node); // Crea il nodo
         tree.addNode(figlio); // Lo aggiunge all'albero
         selectedNode.setFiglioDx(figlio.getIndiceNodo());
-        Text numberText = new Text(Integer.toString(figlio.getIndiceNodo())); 
+        Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
         numberText.setFill(Color.WHITE);
         numberText.setX(node.getCenterX() - 5); // Imposta la posizione X del testo all'interno del cerchio
         numberText.setY(node.getCenterY() + 5);
@@ -197,26 +200,46 @@ public class PannelloPrincipale implements Initializable {
      * prendo un qualsiasi figlio che non ha già due figli e genero un figlio e così
      * via
      */
+
+    private Timeline timeline;
+
     @FXML
     void buttonRandom(ActionEvent event) {
-        int randomDim = random.nextInt(8) + 15;
+        log.appendText("Generating a tree...\n");
+        timeline = new Timeline();
+
+        int randomDim = random.nextInt(20) + 30;
         selectedNode = tree.getRoot();
         selectedPallino = selectedNode.circle;
         generateLeftNode();
         generateRightNode();
 
+        double frameDurationMillis = 15; // Adjust frame duration in milliseconds as needed
+
         for (int i = 0; i < randomDim; i++) {
-            Node node = tree.selectRandomNode();
-            selectedNode = node;
-            selectedPallino = selectedNode.circle;
-            if (random.nextInt(2) == 0 && selectedNode.getPuntatoreFiglioSx()==0 && tree.verificaNodo(selectedNode)) {
-                generateLeftNode();
-            } else {
-                if (selectedNode.getPuntatoreFiglioDx()==0 && tree.verificaNodo(selectedNode)) {
-                    generateRightNode();
-                }                
-            }
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(i * frameDurationMillis), e -> {
+                Node node = tree.selectRandomNode();
+                selectedNode = node;
+                selectedPallino = selectedNode.circle;
+
+                if (random.nextInt(2) == 0 && selectedNode.getPuntatoreFiglioSx() == 0
+                        && tree.verificaNodo(selectedNode)) {
+                    generateLeftNode();
+                } else {
+                    if (selectedNode.getPuntatoreFiglioDx() == 0 && tree.verificaNodo(selectedNode)) {
+                        generateRightNode();
+                    }
+                }
+            });
+            timeline.getKeyFrames().add(keyFrame);
+
         }
+        timeline.setOnFinished(e -> {
+            log.appendText("Tree generated\n");
+        });
+        timeline.setCycleCount(1);
+        timeline.play();
+
     }
 
     @Override
