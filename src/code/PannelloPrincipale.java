@@ -199,7 +199,7 @@ public class PannelloPrincipale implements Initializable {
      */
     @FXML
     void buttonRandom(ActionEvent event) {
-        int randomDim = random.nextInt(6) + 5;
+        int randomDim = random.nextInt(8) + 15;
         selectedNode = tree.getRoot();
         selectedPallino = selectedNode.circle;
         generateLeftNode();
@@ -209,10 +209,10 @@ public class PannelloPrincipale implements Initializable {
             Node node = tree.selectRandomNode();
             selectedNode = node;
             selectedPallino = selectedNode.circle;
-            if (random.nextInt(2) == 0 && selectedNode.getPuntatoreFiglioSx()==0) {
+            if (random.nextInt(2) == 0 && selectedNode.getPuntatoreFiglioSx()==0 && tree.verificaNodo(selectedNode)) {
                 generateLeftNode();
             } else {
-                if (selectedNode.getPuntatoreFiglioDx()==0) {
+                if (selectedNode.getPuntatoreFiglioDx()==0 && tree.verificaNodo(selectedNode)) {
                     generateRightNode();
                 }                
             }
