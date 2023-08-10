@@ -1,9 +1,12 @@
 package code;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
 public class Vertex {
     
@@ -11,6 +14,7 @@ public class Vertex {
     private ArrayList<Vertex> vicini;
     private ArrayList<Line> lines;
     private Circle circle;
+    private Map<Line, Text> weights = new HashMap<>();
 
     public Vertex(int indiceVertice, Circle circle) {
         this.indiceVertice = indiceVertice;
@@ -19,8 +23,13 @@ public class Vertex {
         this.circle = circle;
     }
 
-    public void setLine(Line line) {
+    public Text getWeight(Line line) {
+        return weights.get(line);
+    }
+
+    public void setLine(Line line, Text weight) {
         lines.add(line);
+        weights.put(line, weight);
     }
 
     public Line getLine(int index) {

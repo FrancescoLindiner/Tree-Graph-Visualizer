@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -11,11 +12,11 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: grey;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipaleGraph">
    <children>
-      <Button fx:id="button" layoutX="474.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertNode" prefHeight="45.0" prefWidth="159.0" text="INSERT A NODE">
+      <Button fx:id="button" layoutX="325.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertNode" prefHeight="45.0" prefWidth="159.0" text="INSERT A NODE">
          <effect>
             <DropShadow />
          </effect></Button>
-      <Button fx:id="button" layoutX="59.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
+      <Button fx:id="button" layoutX="14.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
          <effect>
             <DropShadow />
          </effect></Button>
@@ -31,7 +32,7 @@
       </ScrollPane>
       <Slider fx:id="slider" layoutX="696.0" layoutY="661.0" max="10.0" min="0.3" prefHeight="28.0" prefWidth="178.0" value="1.0" />
       <Text layoutX="763.0" layoutY="663.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed" />
-      <Button fx:id="button" layoutX="249.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonRandom" prefHeight="45.0" prefWidth="131.0" text="RANDOM">
+      <Button fx:id="button" layoutX="152.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonRandom" prefHeight="45.0" prefWidth="131.0" text="RANDOM">
          <effect>
             <DropShadow />
          </effect>
@@ -71,5 +72,6 @@
             <DropShadow />
          </effect>
       </Button>
+      <TextField fx:id="inputField" layoutX="515.0" layoutY="658.0" promptText="Insert a weight" />
    </children>
 </Pane>

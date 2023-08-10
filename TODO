@@ -1,0 +1,3 @@
+- Fixare bug indice nodo
+- Fixare bug selectedVertex
+- Implementare Bellman-Ford

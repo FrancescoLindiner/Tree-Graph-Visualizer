@@ -78,6 +78,7 @@ public class PannelloPrincipaleTree implements Initializable {
 
     @FXML
     void buttonIndietro(ActionEvent event) throws IOException {
+        buttonReset(event);
         parent = FXMLLoader.load(getClass()
                 .getResource("../resources/PannelloPrincipale.fxml"));
         stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
@@ -128,9 +129,10 @@ public class PannelloPrincipaleTree implements Initializable {
 
         // Disegna la linea che connette i nodi
         Line connectionLine = new Line(
-                selectedPallino.getCenterX() - 13, selectedPallino.getCenterY() + 15,
-                node.getCenterX() + 13, node.getCenterY() - 15);
+                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+                node.getCenterX(), node.getCenterY());
         pane.getChildren().add(connectionLine);
+        connectionLine.toBack();
     }
 
     @FXML
@@ -179,9 +181,11 @@ public class PannelloPrincipaleTree implements Initializable {
 
         // Disegna la linea che connette i nodi
         Line connectionLine = new Line(
-                selectedPallino.getCenterX() + 13, selectedPallino.getCenterY() + 15,
-                node.getCenterX() - 13, node.getCenterY() - 15);
+                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+                node.getCenterX(), node.getCenterY());
         pane.getChildren().add(connectionLine);
+        connectionLine.toBack();
+
     }
 
     @FXML
