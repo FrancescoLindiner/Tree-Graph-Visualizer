@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PannelloPrincipaleGraph",
+            "request": "launch",
+            "mainClass": "code.PannelloPrincipaleGraph",
+            "projectName": "TreeVisualizer_9b21b135"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
