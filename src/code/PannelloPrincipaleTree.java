@@ -151,10 +151,6 @@ public class PannelloPrincipaleTree implements Initializable {
     void generateRightNode() {
         Circle node = new Circle(20, Color.BLUE); // Crea il pallino colorato
 
-        // Il problema è che si deve aggiornare selectedPallino al nodo che si sta
-        // considerando
-        // forse conviene fare un nuovo metodo
-
         node.setCenterX(selectedPallino.getCenterX() + 55);
         node.setCenterY(selectedPallino.getCenterY() + 60);
         Node figlio = new Node(++indici, node); // Crea il nodo
@@ -217,8 +213,6 @@ public class PannelloPrincipaleTree implements Initializable {
         onStart();
     }
 
-    Random random = new Random();
-
     /*
      * Dalla radice genero due figli
      * prendo uno dei due figli e genero un figlio
@@ -230,6 +224,8 @@ public class PannelloPrincipaleTree implements Initializable {
 
     @FXML
     void buttonRandom(ActionEvent event) {
+        Random random = new Random();
+
         log.appendText("Generating a tree...\n");
         timeline = new Timeline();
 
