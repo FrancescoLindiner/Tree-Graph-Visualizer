@@ -51,4 +51,18 @@ public class Vertex {
     public Circle getVicino(int index) {
         return vicini.get(index).circle;
     }
+
+    public Circle getCircle() {
+        return this.circle;
+    }
+
+    public Text getNumberText() {
+        // Restituisci l'etichetta numerica associata a questo vertice (se presente)
+        for (Map.Entry<Line, Text> entry : weights.entrySet()) {
+            if (entry.getValue() != null) {
+                return entry.getValue();
+            }
+        }
+        return null; // Restituisci null se l'etichetta numerica non è presente
+    }
 }
