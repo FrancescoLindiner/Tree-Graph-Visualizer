@@ -9,18 +9,24 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 public class Vertex {
-    
+
     private int indiceVertice;
     private ArrayList<Vertex> vicini;
     private ArrayList<Line> lines;
     private Circle circle;
     private Map<Line, Text> weights = new HashMap<>();
+    private ArrayList<Edge> edges;
 
     public Vertex(int indiceVertice, Circle circle) {
         this.indiceVertice = indiceVertice;
         vicini = new ArrayList<>();
         lines = new ArrayList<>();
         this.circle = circle;
+        this.edges = new ArrayList<>();
+    }
+
+    public void setEdge(Edge edge) {
+        edges.add(edge);
     }
 
     public Text getWeight(Line line) {
@@ -52,6 +58,10 @@ public class Vertex {
         return vicini.get(index).circle;
     }
 
+    public ArrayList<Vertex> getVicino(Vertex v) {
+        return vicini;
+    }
+
     public Circle getCircle() {
         return this.circle;
     }
@@ -64,5 +74,9 @@ public class Vertex {
             }
         }
         return null; // Restituisci null se l'etichetta numerica non è presente
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return this.edges;
     }
 }

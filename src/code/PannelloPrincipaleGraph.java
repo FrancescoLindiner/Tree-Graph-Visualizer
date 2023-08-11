@@ -73,9 +73,11 @@ public class PannelloPrincipaleGraph implements Initializable {
         stage.show();
     }
 
+    GraphAlgorithms graphAlgorithms = new GraphAlgorithms();
+
     @FXML
     void buttonBellmanFord(ActionEvent event) {
-
+        graphAlgorithms.executeBellmanFord(graph, selectedVertex);
     }
 
     @FXML
@@ -87,6 +89,9 @@ public class PannelloPrincipaleGraph implements Initializable {
     void buttonInsertNode(ActionEvent event) {
         Circle vertexCircle = new Circle(20, Color.BLUE);
         Vertex vertex = new Vertex(indici++, vertexCircle);
+        Edge edge = new Edge(Integer.parseInt(inputField.getText()), selectedVertex, vertex);
+        vertex.setEdge(edge);
+        selectedVertex.setEdge(edge);
 
         vertexCircle.setCenterX(selectedPallino.getCenterX() - 55);
         vertexCircle.setCenterY(selectedPallino.getCenterY() + 60);
@@ -186,6 +191,14 @@ public class PannelloPrincipaleGraph implements Initializable {
     void buttonInsertRandomNode(ActionEvent event, double d, double f, int weight) {
         Circle vertexCircle = new Circle(20, Color.BLUE);
         Vertex vertex = new Vertex(indici++, vertexCircle);
+        Edge edge;
+        if (inputField.getText().equals("")) {
+            edge = new Edge(weight, selectedVertex, vertex);
+        } else {
+            edge = new Edge(weight, selectedVertex, vertex);
+        }
+        vertex.setEdge(edge);
+        selectedVertex.setEdge(edge);
 
         vertexCircle.setCenterX(d);
         vertexCircle.setCenterY(f);

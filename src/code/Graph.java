@@ -33,4 +33,8 @@ public class Graph {
     public ArrayList<Vertex> getGraph() {
         return graph;
     }
+
+    public int getSize() {
+        return graph.size();
+    }
 }
