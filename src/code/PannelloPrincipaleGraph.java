@@ -3,7 +3,6 @@ package code;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -77,7 +76,17 @@ public class PannelloPrincipaleGraph implements Initializable {
 
     @FXML
     void buttonBellmanFord(ActionEvent event) {
-        graphAlgorithms.executeBellmanFord(graph, selectedVertex);
+        log.appendText(
+                "-------------------------\nBellman-Ford\nFrom vertex " + selectedVertex.getIndiceVertice() + "\n");
+        int[] distance = graphAlgorithms.executeBellmanFord(graph, selectedVertex);
+        int j = selectedVertex.getIndiceVertice();
+        for (int i = 0; i < distance.length; i++) {
+            log.appendText("To " + j + ": " + distance[j] + "\n");
+            j++;
+            if (j > distance.length - 1) {
+                j = 0;
+            }
+        }
     }
 
     @FXML
@@ -89,7 +98,12 @@ public class PannelloPrincipaleGraph implements Initializable {
     void buttonInsertNode(ActionEvent event) {
         Circle vertexCircle = new Circle(20, Color.BLUE);
         Vertex vertex = new Vertex(indici++, vertexCircle);
-        Edge edge = new Edge(Integer.parseInt(inputField.getText()), selectedVertex, vertex);
+        Edge edge;
+        if (!inputField.getText().equals("")) {
+            edge = new Edge(Integer.parseInt(inputField.getText()), selectedVertex, vertex);
+        } else {
+            edge = new Edge(0, selectedVertex, vertex);
+        }
         vertex.setEdge(edge);
         selectedVertex.setEdge(edge);
 
@@ -125,11 +139,10 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         // Calculate the position for the weight text node
         double weightTextX = (selectedPallino.getCenterX() + vertexCircle.getCenterX()) / 2;
-        double weightTextY = (selectedPallino.getCenterY() + vertexCircle.getCenterY()) / 2 - 10; // Adjust the Y
-                                                                                                  // position
+        double weightTextY = (selectedPallino.getCenterY() + vertexCircle.getCenterY()) / 2 - 10;
 
-        Text weightText = new Text(weightTextX, weightTextY, inputField.getText()); // Use the inputField value as the
-                                                                                    // weight
+        Text weightText = new Text(weightTextX, weightTextY, inputField.getText());
+
         pane.getChildren().addAll(connectionLine, weightText);
         connectionLine.toBack();
 
@@ -172,8 +185,6 @@ public class PannelloPrincipaleGraph implements Initializable {
         vertexCircle.setOnMouseReleased(e -> {
             if (isDragging) {
                 isDragging = false;
-                // Perform any necessary updates after dragging ends
-                // For example, updating vertex positions in your graph data structure
             }
         });
     }
@@ -280,8 +291,6 @@ public class PannelloPrincipaleGraph implements Initializable {
         vertexCircle.setOnMouseReleased(e -> {
             if (isDragging) {
                 isDragging = false;
-                // Perform any necessary updates after dragging ends
-                // For example, updating vertex positions in your graph data structure
             }
         });
     }
@@ -302,15 +311,65 @@ public class PannelloPrincipaleGraph implements Initializable {
                 selectedPallino = selectedVertex.getCircle();
                 buttonInsertRandomNode(event, rand.nextInt(639) + 20,
                         rand.nextInt(537) + 20, rand.nextInt(16) + 5);
-                System.out.println(rand.nextInt(5) + 10);
             });
             timeline.getKeyFrames().add(keyFrame);
         }
+
         timeline.setOnFinished(e -> {
-            log.appendText("Tree generated\n");
+            Vertex randomVertex1 = null;
+            Vertex randomVertex2 = null;
+            do {
+                randomVertex1 = graph.getRandomVertex();
+                randomVertex2 = graph.getRandomVertex();
+            } while (checkVertex(randomVertex1, randomVertex2));
+
+            addConnection(graph.getRandomVertex(), graph.getRandomVertex());
+            log.appendText("Graph generated\n");
         });
         timeline.setCycleCount(1); // Run the timeline indefinitely
         timeline.play();
+    }
+
+    private boolean checkVertex(Vertex randomVertex1, Vertex randomVertex2) {
+        ArrayList<Edge> vicini = randomVertex1.getEdges();
+        if (vicini.contains(randomVertex2.getEdges())) {
+            return true;
+        }
+        return false;
+    }
+
+    Random rand = new Random();
+
+    private void addConnection(Vertex randomVertex, Vertex randomVertex2) {
+        int weight = rand.nextInt(20) + 5;
+        Edge edge = new Edge(weight, randomVertex, randomVertex2);
+
+        
+
+        double weightTextX = (randomVertex.getCircle().getCenterX() + randomVertex2.getCircle().getCenterX()) / 2;
+        double weightTextY = (randomVertex.getCircle().getCenterX() + randomVertex2.getCircle().getCenterX()) / 2 - 10;
+        Text numberText;
+        if (inputField.getText().equals("")) {
+            numberText = new Text(weightTextX, weightTextY, Integer.toString(weight));
+        } else {
+            numberText = new Text(weightTextX, weightTextY, inputField.getText());
+        }
+
+        Line connectionLine = new Line(randomVertex.getCircle().getCenterX(), randomVertex.getCircle().getCenterY(),
+                randomVertex2.getCircle().getCenterX(), randomVertex2.getCircle().getCenterY());
+
+
+
+        randomVertex.setEdge(edge);
+        randomVertex.setVicino(randomVertex2);
+        randomVertex.setLine(connectionLine, numberText);
+
+        randomVertex2.setVicino(randomVertex);
+        randomVertex2.setEdge(edge);
+        randomVertex2.setLine(connectionLine, numberText);
+
+        pane.getChildren().addAll(connectionLine, numberText);
+        connectionLine.toBack();
     }
 
     @FXML

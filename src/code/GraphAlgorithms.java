@@ -1,11 +1,8 @@
 package code;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 public class GraphAlgorithms {
 
-    public void executeBellmanFord(Graph graph, Vertex selectedVertex) {
+    public int[] executeBellmanFord(Graph graph, Vertex selectedVertex) {
         int[] distance = new int[graph.getSize()];
 
         for (int i = 0; i < distance.length; i++) {
@@ -33,13 +30,7 @@ public class GraphAlgorithms {
                 }
             }
         }
-
-        for (int i = 0; i < distance.length; i++) {
-            System.out.println(distance[i]);
-        }
-    }
-
-    private int getDistance(Vertex selectedVertex, Vertex vertex) {
-        return 0;
+        
+        return distance;
     }
 }
