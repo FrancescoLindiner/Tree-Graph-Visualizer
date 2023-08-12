@@ -19,6 +19,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -36,10 +37,12 @@ public class PannelloPrincipaleGraph implements Initializable {
     Scene scene;
     static int indici = 0;
     Graph graph = new Graph();
-    private Circle selectedPallino; // Variabile per memorizzare il pallino selezionato
+    private Circle selectedPallino, selectedPallino2; // Variabile per memorizzare il pallino selezionato
     private Vertex selectedVertex;
     private double mouseX, mouseY; // Store the initial mouse click position
     private boolean isDragging = false;
+    private Vertex secondVertex;
+    GraphAlgorithms graphAlgorithms = new GraphAlgorithms();
 
     @FXML
     private Button button;
@@ -72,8 +75,6 @@ public class PannelloPrincipaleGraph implements Initializable {
         stage.show();
     }
 
-    GraphAlgorithms graphAlgorithms = new GraphAlgorithms();
-
     @FXML
     void buttonBellmanFord(ActionEvent event) {
         log.appendText(
@@ -93,6 +94,8 @@ public class PannelloPrincipaleGraph implements Initializable {
     void buttonDijkstra(ActionEvent event) {
 
     }
+
+    public boolean ctrlPressed = false;
 
     @FXML
     void buttonInsertNode(ActionEvent event) {
@@ -125,6 +128,12 @@ public class PannelloPrincipaleGraph implements Initializable {
         log.appendText("Add vertex " + vertex.getIndiceVertice() + "\n");
 
         vertexCircle.setOnMouseClicked(e -> {
+            if (e.isControlDown()) {
+                selectedPallino2 = vertexCircle;
+                secondVertex = vertex;
+                addConnection(secondVertex, selectedVertex);
+                return;
+            }
             selectedVertex = vertex;
             log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
 
@@ -229,6 +238,12 @@ public class PannelloPrincipaleGraph implements Initializable {
         log.appendText("Add vertex " + vertex.getIndiceVertice() + "\n");
 
         vertexCircle.setOnMouseClicked(e -> {
+            if (e.isControlDown()) {
+                selectedPallino2 = vertexCircle;
+                secondVertex = vertex;
+                addConnection(secondVertex, selectedVertex);
+                return;
+            }
             selectedVertex = vertex;
             log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
 
@@ -344,21 +359,18 @@ public class PannelloPrincipaleGraph implements Initializable {
         int weight = rand.nextInt(20) + 5;
         Edge edge = new Edge(weight, randomVertex, randomVertex2);
 
-        
+        Line connectionLine = new Line(randomVertex.getCircle().getCenterX(), randomVertex.getCircle().getCenterY(),
+                randomVertex2.getCircle().getCenterX(), randomVertex2.getCircle().getCenterY());
 
         double weightTextX = (randomVertex.getCircle().getCenterX() + randomVertex2.getCircle().getCenterX()) / 2;
-        double weightTextY = (randomVertex.getCircle().getCenterX() + randomVertex2.getCircle().getCenterX()) / 2 - 10;
+        double weightTextY = (randomVertex.getCircle().getCenterY() + randomVertex2.getCircle().getCenterY()) / 2 - 10;
+
         Text numberText;
         if (inputField.getText().equals("")) {
             numberText = new Text(weightTextX, weightTextY, Integer.toString(weight));
         } else {
             numberText = new Text(weightTextX, weightTextY, inputField.getText());
         }
-
-        Line connectionLine = new Line(randomVertex.getCircle().getCenterX(), randomVertex.getCircle().getCenterY(),
-                randomVertex2.getCircle().getCenterX(), randomVertex2.getCircle().getCenterY());
-
-
 
         randomVertex.setEdge(edge);
         randomVertex.setVicino(randomVertex2);
@@ -409,11 +421,19 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         pane.getChildren().addAll(vertexCircle, numberText);
 
-        vertexCircle.setOnMouseClicked(event -> {
-            log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
-            vertexCircle.setFill(Color.GREEN);
-            selectedPallino = vertexCircle;
+        vertexCircle.setOnMouseClicked(e -> {
+            if (e.isControlDown()) {
+                selectedPallino2 = vertexCircle;
+                secondVertex = vertex;
+                addConnection(secondVertex, selectedVertex);
+                return;
+            }
             selectedVertex = vertex;
+            log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
+
+            selectedPallino = vertexCircle;
+            vertexCircle.setFill(Color.GREEN);
+            selectedPallino.setFill(Color.BLUE);
         });
 
         vertexCircle.setOnMousePressed(e -> {
