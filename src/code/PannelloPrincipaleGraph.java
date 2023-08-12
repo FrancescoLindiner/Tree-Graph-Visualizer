@@ -19,7 +19,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -38,7 +37,7 @@ public class PannelloPrincipaleGraph implements Initializable {
     static int indici = 0;
     Graph graph = new Graph();
     private Circle selectedPallino, selectedPallino2; // Variabile per memorizzare il pallino selezionato
-    private Vertex selectedVertex;
+    private Vertex selectedVertex, dijkstraVertex;
     private double mouseX, mouseY; // Store the initial mouse click position
     private boolean isDragging = false;
     private Vertex secondVertex;
@@ -92,7 +91,22 @@ public class PannelloPrincipaleGraph implements Initializable {
 
     @FXML
     void buttonDijkstra(ActionEvent event) {
+        ArrayList<Vertex> path = graphAlgorithms.executeDijkstra(graph, selectedVertex, dijkstraVertex);
 
+        Timeline timeline = new Timeline();
+
+        double frameDurationMillis = 500; // Adjust frame duration in milliseconds as needed
+
+        for (int i = 0; i < path.size(); i++) {
+            final int index = i; // Cattura l'indice in una variabile finale
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(index * frameDurationMillis), e -> {
+                path.get(index).getCircle().setFill(Color.RED);
+            });
+            timeline.getKeyFrames().add(keyFrame);
+        }
+
+        timeline.setCycleCount(1); // Run the timeline indefinitely
+        timeline.play();
     }
 
     public boolean ctrlPressed = false;
@@ -133,6 +147,12 @@ public class PannelloPrincipaleGraph implements Initializable {
                 secondVertex = vertex;
                 addConnection(secondVertex, selectedVertex);
                 return;
+            }
+            if (e.isShiftDown()) {
+                dijkstraVertex = vertex;
+                return;
+                // First is selectedVertex
+                // Second is dijkstraVertex
             }
             selectedVertex = vertex;
             log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
@@ -243,6 +263,12 @@ public class PannelloPrincipaleGraph implements Initializable {
                 secondVertex = vertex;
                 addConnection(secondVertex, selectedVertex);
                 return;
+            }
+            if (e.isShiftDown()) {
+                dijkstraVertex = vertex;
+                return;
+                // First is selectedVertex
+                // Second is dijkstraVertex
             }
             selectedVertex = vertex;
             log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
@@ -358,6 +384,7 @@ public class PannelloPrincipaleGraph implements Initializable {
     private void addConnection(Vertex randomVertex, Vertex randomVertex2) {
         int weight = rand.nextInt(20) + 5;
         Edge edge = new Edge(weight, randomVertex, randomVertex2);
+        Edge edge2 = new Edge(weight, randomVertex2, randomVertex);
 
         Line connectionLine = new Line(randomVertex.getCircle().getCenterX(), randomVertex.getCircle().getCenterY(),
                 randomVertex2.getCircle().getCenterX(), randomVertex2.getCircle().getCenterY());
@@ -377,7 +404,7 @@ public class PannelloPrincipaleGraph implements Initializable {
         randomVertex.setLine(connectionLine, numberText);
 
         randomVertex2.setVicino(randomVertex);
-        randomVertex2.setEdge(edge);
+        randomVertex2.setEdge(edge2);
         randomVertex2.setLine(connectionLine, numberText);
 
         pane.getChildren().addAll(connectionLine, numberText);
@@ -427,6 +454,12 @@ public class PannelloPrincipaleGraph implements Initializable {
                 secondVertex = vertex;
                 addConnection(secondVertex, selectedVertex);
                 return;
+            }
+            if (e.isShiftDown()) {
+                dijkstraVertex = vertex;
+                return;
+                // First is selectedVertex
+                // Second is dijkstraVertex
             }
             selectedVertex = vertex;
             log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");

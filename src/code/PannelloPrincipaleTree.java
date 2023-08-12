@@ -213,17 +213,11 @@ public class PannelloPrincipaleTree implements Initializable {
         onStart();
     }
 
-    /*
-     * Dalla radice genero due figli
-     * prendo uno dei due figli e genero un figlio
-     * prendo un qualsiasi figlio che non ha già due figli e genero un figlio e così
-     * via
-     */
-
     private Timeline timeline;
 
     @FXML
     void buttonRandom(ActionEvent event) {
+        buttonReset(event);
         Random random = new Random();
 
         log.appendText("Generating a tree...\n");
