@@ -31,7 +31,7 @@
          <effect>
             <DropShadow />
          </effect></Button>
-      <TextArea fx:id="log" layoutX="682.0" layoutY="56.0" prefHeight="587.0" prefWidth="214.0" promptText="Select a node and insert a node" style="-fx-background-color: white;">
+      <TextArea fx:id="log" layoutX="682.0" layoutY="56.0" prefHeight="587.0" prefWidth="214.0" promptText="Log" style="-fx-background-color: white;">
          <font>
             <Font name="Arial Rounded MT Bold" size="17.0" />
          </font>
@@ -58,7 +58,12 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Text>
-      <Button fx:id="button" layoutX="8.0" layoutY="4.0" mnemonicParsing="false" onAction="#buttonIndietro" prefHeight="45.0" prefWidth="50.0" text="&lt;">
+      <Button fx:id="button" layoutX="15.0" layoutY="13.0" mnemonicParsing="false" onAction="#buttonIndietro" prefHeight="30.0" prefWidth="30.0" text="&lt;">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <Button fx:id="button" layoutX="854.0" layoutY="13.0" mnemonicParsing="false" onAction="#buttonInstruction" prefHeight="30.0" prefWidth="30.0" text="?">
          <effect>
             <DropShadow />
          </effect>

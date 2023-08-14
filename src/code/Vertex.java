@@ -25,6 +25,10 @@ public class Vertex {
         this.edges = new ArrayList<>();
     }
 
+    public ArrayList<Line> getLine() {
+        return lines;
+    }
+
     public void setEdge(Edge edge) {
         edges.add(edge);
     }

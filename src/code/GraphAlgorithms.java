@@ -1,10 +1,14 @@
 package code;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
+
+import javafx.scene.control.TextArea;
 
 public class GraphAlgorithms {
 
@@ -40,7 +44,7 @@ public class GraphAlgorithms {
         return distance;
     }
 
-    public ArrayList<Vertex> executeDijkstra(Graph graph, Vertex selectedVertex, Vertex dijkstraVertex) {
+    public ArrayList<Vertex> executeDijkstra(Graph graph, Vertex selectedVertex, Vertex dijkstraVertex, TextArea log) {
         ArrayList<ArrayList<Vertex>> paths = new ArrayList<>();
         int[] distance = new int[graph.getSize()];
         Vertex[] predecessors = new Vertex[graph.getSize()];
@@ -88,33 +92,54 @@ public class GraphAlgorithms {
             paths.add(shortestPath);
         }
 
+        log.appendText("--------------------\nDijkstra\nPath:\n");
         ArrayList<Vertex> shortestPath = paths.get(dijkstraVertex.getIndiceVertice());
         for (Vertex vertex : shortestPath) {
-            System.out.print(vertex.getIndiceVertice() + " ");
+            log.appendText(vertex.getIndiceVertice() + " ");
         }
-        System.out.println(" - Distance: " + distance[dijkstraVertex.getIndiceVertice()]);
+        log.appendText("\nDistance: " + distance[dijkstraVertex.getIndiceVertice()] + "\n");
 
         return shortestPath;
 
     }
 
-    /*
-     * public void executeDijkstra(Graph graph, Vertex selectedVertex, Vertex
-     * dijkstraVertex) {
-     * int[] distance = new int[graph.getSize()];
-     * ArrayList<Vertex> vicini = selectedVertex.getVicino(selectedVertex);
-     * ArrayList<Edge> edges = selectedVertex.getEdges();
-     * for (int i = 0; i < distance.length; i++) {
-     * if (i < vicini.size() && vicini.get(i).getIndiceVertice() == i) {
-     * distance[i] = edges.get(i).getWeight();
-     * } else {
-     * distance[i] = Integer.MAX_VALUE;
-     * }
-     * }
-     * distance[selectedVertex.getIndiceVertice()] = 0;
-     * for (int i = 0; i < distance.length; i++) {
-     * System.out.println(distance[i] + " ");
-     * }
-     * }
-     */
+    public Map<String, List<?>> executePrim(Vertex selectedVertex, Graph graph) {
+        ArrayList<Vertex> listaDiVertici = new ArrayList<>();
+        ArrayList<Edge> listaDiArchi = new ArrayList<>();
+
+        listaDiVertici.add(selectedVertex);
+
+        while (listaDiVertici.size() < graph.getSize()) {
+            Edge minEdge = null;
+            int minWeight = Integer.MAX_VALUE;
+
+            for (Vertex vertex : listaDiVertici) {
+                ArrayList<Edge> viciniEdge = vertex.getEdges();
+                for (Edge edge : viciniEdge) {
+                    if ((listaDiVertici.contains(edge.getV1()) && !listaDiVertici.contains(edge.getV2()))
+                            || (!listaDiVertici.contains(edge.getV1()) && listaDiVertici.contains(edge.getV2()))) {
+                        if (!listaDiArchi.contains(edge) && edge.getWeight() < minWeight) {
+                            minEdge = edge;
+                            minWeight = edge.getWeight();
+                        }
+                    }
+                }
+            }
+
+            if (minEdge != null) {
+                listaDiArchi.add(minEdge);
+                if (!listaDiVertici.contains(minEdge.getV1())) {
+                    listaDiVertici.add(minEdge.getV1());
+                } else {
+                    listaDiVertici.add(minEdge.getV2());
+                }
+            }
+        }
+
+        Map<String, List<?>> result = new HashMap<>();
+        result.put("archi", listaDiArchi);
+        result.put("vertici", listaDiVertici);
+
+        return result;
+    }
 }

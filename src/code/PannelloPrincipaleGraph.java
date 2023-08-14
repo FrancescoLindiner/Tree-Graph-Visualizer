@@ -3,10 +3,15 @@ package code;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,13 +19,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -75,6 +86,30 @@ public class PannelloPrincipaleGraph implements Initializable {
     }
 
     @FXML
+    void buttonInstruction(ActionEvent event) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("How to use the app");
+        alert.setHeaderText(null);
+
+        String bullet = "\u2022"; // Codice Unicode per il carattere del punto
+
+        String contentText = bullet + " To insert a node, select a node and click 'Insert a node'\n"
+                + bullet + " To move a node, double click on the node and move it\n"
+                + bullet
+                + " To connect two nodes, select a first node, then hold the 'Ctrl' key and select the second node\n"
+                + bullet
+                + " Dijkstra: To calculate the minimum path to a destination node, hold the 'Shift' key and select the node";
+
+        alert.setContentText(contentText);
+
+        String customStyle = "-fx-font-size: 16px;";
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle(customStyle);
+
+        alert.showAndWait();
+    }
+
+    @FXML
     void buttonBellmanFord(ActionEvent event) {
         log.appendText(
                 "-------------------------\nBellman-Ford\nFrom vertex " + selectedVertex.getIndiceVertice() + "\n");
@@ -91,7 +126,7 @@ public class PannelloPrincipaleGraph implements Initializable {
 
     @FXML
     void buttonDijkstra(ActionEvent event) {
-        ArrayList<Vertex> path = graphAlgorithms.executeDijkstra(graph, selectedVertex, dijkstraVertex);
+        ArrayList<Vertex> path = graphAlgorithms.executeDijkstra(graph, selectedVertex, dijkstraVertex, log);
 
         Timeline timeline = new Timeline();
 
@@ -224,9 +259,34 @@ public class PannelloPrincipaleGraph implements Initializable {
     }
 
     @FXML
-    void buttonPrim(ActionEvent event) {
+void buttonPrim(ActionEvent event) {
+    Timeline timeline = new Timeline();
+    double frameDurationMillis = 700; // Adjust frame duration in milliseconds as needed
 
+    Map<String, List<?>> result = graphAlgorithms.executePrim(selectedVertex, graph);
+    List<Vertex> vertexList = (List<Vertex>) result.get("vertici");
+
+    for (int i = 0; i < vertexList.size(); i++) {
+        final int index = i;
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(index * frameDurationMillis), e -> {
+            Vertex vertex = vertexList.get(index);
+            vertex.getCircle().setFill(Color.RED);
+            log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
+
+            // Aggiungi un ritardo per l'istruzione specifica
+            PauseTransition pauseTransition = new PauseTransition(Duration.millis(300));
+            pauseTransition.setOnFinished(ev -> {
+                vertex.getLine(0).setStroke(Color.RED);
+            });
+            pauseTransition.play();
+        });
+        timeline.getKeyFrames().add(keyFrame);
     }
+
+    timeline.setCycleCount(1);
+    timeline.play();
+}
+
 
     void buttonInsertRandomNode(ActionEvent event, double d, double f, int weight) {
         Circle vertexCircle = new Circle(20, Color.BLUE);
@@ -364,7 +424,7 @@ public class PannelloPrincipaleGraph implements Initializable {
                 randomVertex2 = graph.getRandomVertex();
             } while (checkVertex(randomVertex1, randomVertex2));
 
-            addConnection(graph.getRandomVertex(), graph.getRandomVertex());
+            addConnection(randomVertex1, randomVertex2);
             log.appendText("Graph generated\n");
         });
         timeline.setCycleCount(1); // Run the timeline indefinitely

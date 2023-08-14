@@ -13,6 +13,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
@@ -71,6 +74,25 @@ public class PannelloPrincipaleTree implements Initializable {
             selectedPallino = pallino;
             selectedNode = root;
         });
+    }
+
+    @FXML
+    void buttonInstruction(ActionEvent event) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("How to use the app");
+        alert.setHeaderText(null);
+
+        String bullet = "\u2022"; // Codice Unicode per il carattere del punto
+
+        String contentText = bullet + "To insert a node select a node and click either 'Insert right node' or 'Insert left node'";
+
+        alert.setContentText(contentText);
+
+        String customStyle = "-fx-font-size: 16px;";
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle(customStyle);
+
+        alert.showAndWait();
     }
 
     DFS dfs = new DFS();
