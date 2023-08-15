@@ -164,6 +164,7 @@ public class PannelloPrincipaleTree implements Initializable {
         node.setCenterY(selectedPallino.getCenterY() + 70);
 
         tree.addNode(figlio);
+        selectedNode.setFigli(figlio);
         selectedNode.set_nNodes();
 
         Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
@@ -450,7 +451,6 @@ public class PannelloPrincipaleTree implements Initializable {
                 Node n = buttonInsertNode(event);
                 if (!tree.checkCoordianteNode(n)) {
                     // si deve cancellare
-                    System.out.println(n.getIndiceNodo() + " si deve cancellare");
                     deleteNode(n);
                 }
             }

@@ -1,6 +1,7 @@
 package code;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 
 import javafx.animation.KeyFrame;
@@ -27,15 +28,12 @@ public class DFS {
                 log.appendText("Node visited " + node.getIndiceNodo() + "\n");
 
                 node.setColor();
-
-                if (node.getPuntatoreFiglioDx() != 0) {
-                    Node rightChild = tree.getNodeDx(node);
-                    stack.push(rightChild);
+                
+                ArrayList<Node> figli = node.getFigli();
+                for (Node node2 : figli) {
+                    stack.push(node2);
                 }
-                if (node.getPuntatoreFiglioSx() != 0) {
-                    Node leftChild = tree.getNodeSx(node);
-                    stack.push(leftChild);
-                }
+                
             }
         });
 

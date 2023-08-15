@@ -15,6 +15,7 @@ public class Node {
     Circle circle;
     private ArrayList<Line> lines;
     private ArrayList<Node> vicini;
+    private ArrayList<Node> figli;
     private Text numberText;
 
     public Node(int indiceNodo, Circle circle) {
@@ -23,6 +24,15 @@ public class Node {
         nNodes = 0;
         lines = new ArrayList<>();
         vicini = new ArrayList<>();
+        figli = new ArrayList<>();
+    }
+
+    public void setFigli(Node figlio) {
+        figli.add(figlio);
+    }
+
+    public ArrayList<Node> getFigli() {
+        return this.figli;
     }
 
     public void setNumberText(Text numberText) {
