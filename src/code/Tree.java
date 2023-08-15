@@ -7,6 +7,10 @@ public class Tree {
 
     private ArrayList<Node> tree;
 
+    public ArrayList<Node> getNodes() {
+        return tree;
+    }
+
     public Tree() {
         tree = new ArrayList<>();
     }
@@ -46,27 +50,26 @@ public class Tree {
     public Node selectRandomNode() {
         Random rand = new Random();
         Node randomNode = null;
-        do {
-            int indiceCasuale = rand.nextInt(tree.size()); // Genera un indice casuale nell'intervallo valido
-            randomNode = tree.get(indiceCasuale); // Ottiene il nodo corrispondente all'indice casuale
-        } while (randomNode.equals(getRoot()) && // Continua finché il nodo è la radice
-                (randomNode.getPuntatoreFiglioDx() == 0 || randomNode.getPuntatoreFiglioSx() == 0)); // oppure non ha
-                                                                                                     // figli
 
+        do {
+            int indiceCasuale = rand.nextInt(tree.size());
+            randomNode = tree.get(indiceCasuale);
+        } while (randomNode.equals(getRoot()) && randomNode.get_nNode() != 0);
+        System.out.println(randomNode.getIndiceNodo() + "\n\n");
         return randomNode;
     }
 
     public boolean verificaNodo(Node selectedNode) {
         Node father = getFather(selectedNode);
 
-        if (father.getPuntatoreFiglioDx()==selectedNode.getIndiceNodo()) {
+        if (father.getPuntatoreFiglioDx() == selectedNode.getIndiceNodo()) {
             Node leftChildern = tree.get(father.getPuntatoreFiglioSx());
-            if (leftChildern.getPuntatoreFiglioDx()==0) {
+            if (leftChildern.getPuntatoreFiglioDx() == 0) {
                 return true;
             }
         } else {
             Node rightChildern = tree.get(father.getPuntatoreFiglioDx());
-            if (rightChildern.getPuntatoreFiglioSx()==0) {
+            if (rightChildern.getPuntatoreFiglioSx() == 0) {
                 return true;
             }
         }
@@ -77,9 +80,41 @@ public class Tree {
         for (Node node : tree) {
             if (node.getPuntatoreFiglioDx() == selectedNode.getIndiceNodo()
                     || node.getPuntatoreFiglioSx() == selectedNode.getIndiceNodo()) {
-                        return node;
+                return node;
             }
         }
         return null;
+    }
+
+    public boolean checkX(int x) {
+        for (Node node : tree) {
+            if (node.circle.getCenterX() == x) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkCoordianteNode(Node n) {
+        // devo scorrere tutto l'albero e vedere se le coordinate di n sono contenute
+        // nelle coordinatae di qualche altro nodo
+        boolean overlap = true;
+        double x = n.circle.getCenterX();
+        double y = n.circle.getCenterY();
+        for (Node node : tree) {
+            double x1 = node.circle.getCenterX();
+            double y1 = node.circle.getCenterY();
+            // double distance = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
+            if (node != n && (x == x1 && y == y1)) {
+                if ((x + 10 > x1 - 10) || (x - 10 < x1 + 10) || (x1 + 10 > x - 10) || (x1 - 10 < x + 10)) {
+                    overlap = false;
+                }
+            }
+        }
+        return overlap;
+    }
+
+    public void deleteNode(Node n) {
+        tree.remove(n);
     }
 }

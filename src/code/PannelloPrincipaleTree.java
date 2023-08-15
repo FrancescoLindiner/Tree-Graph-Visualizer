@@ -2,6 +2,7 @@ package code;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -33,6 +34,8 @@ public class PannelloPrincipaleTree implements Initializable {
     Stage stage;
     Scene scene;
     private double mouseX, mouseY; // Store the initial mouse click position
+    static int x = 0;
+    static int livello = 0;
 
     @FXML
     private Pane pane;
@@ -65,6 +68,7 @@ public class PannelloPrincipaleTree implements Initializable {
         numberText.setFill(Color.WHITE);
         numberText.setX(pallino.getCenterX() - 5);
         numberText.setY(pallino.getCenterY() + 5);
+        root.setNumberText(numberText);
         pane.getChildren().addAll(pallino, numberText);
 
         pallino.setOnMouseClicked(event -> {
@@ -146,6 +150,96 @@ public class PannelloPrincipaleTree implements Initializable {
     void buttonBFS(ActionEvent event) {
         log.appendText("---------------------\nStarting BFS...\n");
         bfs.executeBFS(tree.getRoot(), tree, slider.valueProperty().doubleValue(), log);
+    }
+
+    @FXML
+    Node buttonInsertNode(ActionEvent event) {
+        Circle node = new Circle(20, Color.BLUE);
+        Node figlio = new Node(++indici, node);
+
+        int numFigli = selectedNode.get_nNode();
+        int x = getCoordinateX(numFigli);
+
+        node.setCenterX(selectedPallino.getCenterX() - x);
+        node.setCenterY(selectedPallino.getCenterY() + 70);
+
+        tree.addNode(figlio);
+        selectedNode.set_nNodes();
+
+        Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
+        numberText.setFill(Color.WHITE);
+        numberText.setX(node.getCenterX() - 5);
+        numberText.setY(node.getCenterY() + 5);
+        figlio.setNumberText(numberText);
+        pane.getChildren().addAll(node, numberText);
+        log.appendText("Add node " + figlio.getIndiceNodo() + "\n");
+        node.setOnMouseClicked(e -> {
+            selectedNode = figlio;
+            log.appendText("Nodo " + figlio.getIndiceNodo() + "\n");
+            log.appendText("Node's childrens " + selectedNode.getPuntatoreFiglioSx() + " - "
+                    + selectedNode.getPuntatoreFiglioDx() + "\n");
+
+            node.setFill(Color.GREEN);
+            selectedPallino.setFill(Color.BLUE);
+            selectedPallino = node;
+        });
+
+        // Disegna la linea che connette i nodi
+        Line connectionLine = new Line(
+                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+                node.getCenterX(), node.getCenterY());
+
+        selectedNode.setLine(connectionLine);
+        figlio.setLine(connectionLine);
+        selectedNode.setVicino(figlio);
+        figlio.setVicino(selectedNode);
+
+        pane.getChildren().add(connectionLine);
+        connectionLine.toBack();
+
+        node.setOnMousePressed(e -> {
+            mouseX = e.getSceneX() - node.getCenterX();
+            mouseY = e.getSceneY() - node.getCenterY();
+        });
+
+        node.setOnMouseDragged(e -> {
+            double newCircleX = e.getSceneX() - mouseX;
+            double newCircleY = e.getSceneY() - mouseY;
+
+            node.setCenterX(newCircleX);
+            node.setCenterY(newCircleY);
+
+            numberText.setX(newCircleX - 5);
+            numberText.setY(newCircleY + 5);
+
+            for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
+                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
+                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+                selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
+                selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
+            }
+        });
+        return figlio;
+    }
+
+    private int getCoordinateX(int numFigli) {
+        if (numFigli == 0) {
+            x = 0;
+            return 0;
+        } else if (numFigli == 1) {
+            x += 55;
+            return x;
+        } else if (numFigli == 2) {
+            x = -55;
+            return x;
+        } else if (numFigli % 2 == 0) {
+            x = -x;
+            return x;
+        } else {
+            x = Math.abs(x);
+            x += 50;
+            return x;
+        }
     }
 
     void generateLeftNode() {
@@ -268,7 +362,7 @@ public class PannelloPrincipaleTree implements Initializable {
 
         pane.getChildren().add(connectionLine);
         connectionLine.toBack();
-        
+
         node.setOnMousePressed(e -> {
             mouseX = e.getSceneX() - node.getCenterX();
             mouseY = e.getSceneY() - node.getCenterY();
@@ -326,43 +420,90 @@ public class PannelloPrincipaleTree implements Initializable {
 
     @FXML
     void buttonRandom(ActionEvent event) {
+
         buttonReset(event);
         Random random = new Random();
 
         log.appendText("Generating a tree...\n");
         timeline = new Timeline();
 
-        int randomDim = random.nextInt(20) + 30;
+        int randomDim = random.nextInt(4) + 3;
         selectedNode = tree.getRoot();
         selectedPallino = selectedNode.circle;
-        generateLeftNode();
-        generateRightNode();
+        // ArrayList<Node> nodes = new ArrayList<>();
 
-        double frameDurationMillis = 15; // Adjust frame duration in milliseconds as needed
+        /*
+         * for (int i = 0; i < random.nextInt(4)+1; i++) {
+         * Node n = buttonInsertNode(event);
+         * nodes.add(n);
+         * }
+         * for (int i = 0; i < random.nextInt(4)+1; i++) {
+         * Node n = nodes.remove(0);
+         * buttonInsertNode(event);
+         * }
+         */
 
         for (int i = 0; i < randomDim; i++) {
-            KeyFrame keyFrame = new KeyFrame(Duration.millis(i * frameDurationMillis), e -> {
-                Node node = tree.selectRandomNode();
-                selectedNode = node;
-                selectedPallino = selectedNode.circle;
+            int randomChildren = random.nextInt(3) + 1;
 
-                if (random.nextInt(2) == 0 && selectedNode.getPuntatoreFiglioSx() == 0
-                        && tree.verificaNodo(selectedNode)) {
-                    generateLeftNode();
-                } else {
-                    if (selectedNode.getPuntatoreFiglioDx() == 0 && tree.verificaNodo(selectedNode)) {
-                        generateRightNode();
-                    }
+            for (int j = 1; j <= randomChildren; j++) {
+                Node n = buttonInsertNode(event);
+                if (!tree.checkCoordianteNode(n)) {
+                    // si deve cancellare
+                    System.out.println(n.getIndiceNodo() + " si deve cancellare");
+                    deleteNode(n);
                 }
-            });
-            timeline.getKeyFrames().add(keyFrame);
-
+            }
+            Node node = tree.selectRandomNode();
+            selectedNode = node;
+            selectedPallino = selectedNode.circle;
         }
-        timeline.setOnFinished(e -> {
-            log.appendText("Tree generated\n");
-        });
-        timeline.setCycleCount(1);
-        timeline.play();
+
+        /*
+         * double frameDurationMillis = 100;
+         * for (int i = 0; i < randomDim; i++) {
+         * KeyFrame keyFrame = new KeyFrame(Duration.millis(i * frameDurationMillis), e
+         * -> {
+         * 
+         * int randomChildren = random.nextInt(3) + 1;
+         * System.out.println(randomChildren);
+         * for (int j = 1; j <= randomChildren; j++) {
+         * buttonInsertNode(event);
+         * Node node = tree.selectRandomNode();
+         * selectedNode = node;
+         * selectedPallino = selectedNode.circle;
+         * }
+         * });
+         * timeline.getKeyFrames().add(keyFrame);
+         * 
+         * }
+         * timeline.setOnFinished(e -> {
+         * log.appendText("Tree generated\n");
+         * });
+         * timeline.setCycleCount(1);
+         * timeline.play();
+         */
+    }
+
+    private void deleteNode(Node n) {
+        // Rimuovi il nodo e le linee dal Pane
+        pane.getChildren().removeAll(n.circle, n.getNumberText()); // Rimuovi il cerchio e il testo dal Pane
+        for (int i = 0; i < n.getSizeVicini(); i++) {
+            pane.getChildren().remove(n.getLine(i)); // Rimuovi le linee di connessione dal Pane
+        }
+
+        // Rimuovi il nodo dall'albero
+        tree.deleteNode(n);
+
+        // Eventualmente, reimposta il nodo selezionato e il pallino selezionato se
+        // necessario
+        if (n == selectedNode) {
+            selectedNode = null;
+            selectedPallino = null;
+        }
+        for (Node node : tree.getNodes()) {
+            System.out.println(node.getIndiceNodo());
+        }
     }
 
     @Override

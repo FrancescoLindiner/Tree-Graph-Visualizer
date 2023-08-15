@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
 public class Node {
 
@@ -14,6 +15,7 @@ public class Node {
     Circle circle;
     private ArrayList<Line> lines;
     private ArrayList<Node> vicini;
+    private Text numberText;
 
     public Node(int indiceNodo, Circle circle) {
         this.indiceNodo = indiceNodo;
@@ -21,6 +23,14 @@ public class Node {
         nNodes = 0;
         lines = new ArrayList<>();
         vicini = new ArrayList<>();
+    }
+
+    public void setNumberText(Text numberText) {
+        this.numberText = numberText;
+    }
+
+    public Text getNumberText() {
+        return numberText;
     }
 
     public void setColor() {
@@ -55,7 +65,7 @@ public class Node {
         this.nNodes++;
     }
 
-    public int set_nNode() {
+    public int get_nNode() {
         return this.nNodes;
     }
 
