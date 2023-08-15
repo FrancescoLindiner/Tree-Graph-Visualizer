@@ -1,21 +1,62 @@
 package code;
 
+import java.util.ArrayList;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
 public class Node {
-    
+
     private int indiceNodo;
+    private int nNodes;
     private int puntatoreFiglioSx, puntatoreFiglioDx;
     Circle circle;
+    private ArrayList<Line> lines;
+    private ArrayList<Node> vicini;
 
     public Node(int indiceNodo, Circle circle) {
         this.indiceNodo = indiceNodo;
         this.circle = circle;
+        nNodes = 0;
+        lines = new ArrayList<>();
+        vicini = new ArrayList<>();
     }
-    
+
     public void setColor() {
         circle.setFill(Color.BROWN);
+    }
+
+    public void setVicino(Node node) {
+        vicini.add(node);
+    }
+
+    public ArrayList<Line> getLines() {
+        return this.lines;
+    }
+
+    public void setLine(Line line) {
+        lines.add(line);
+    }
+
+    public int getSizeVicini() {
+        return lines.size();
+    }
+
+    public Line getLine(int index) {
+        return this.lines.get(index);
+    }
+
+    public Circle getVicino(int index) {
+        return vicini.get(index).circle;
+    }
+
+    public void set_nNodes() {
+        this.nNodes++;
+    }
+
+    public int set_nNode() {
+        return this.nNodes;
     }
 
     public int getIndiceNodo() {

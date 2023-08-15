@@ -32,6 +32,7 @@ public class PannelloPrincipaleTree implements Initializable {
     Parent parent;
     Stage stage;
     Scene scene;
+    private double mouseX, mouseY; // Store the initial mouse click position
 
     @FXML
     private Pane pane;
@@ -74,6 +75,29 @@ public class PannelloPrincipaleTree implements Initializable {
             selectedPallino = pallino;
             selectedNode = root;
         });
+
+        pallino.setOnMousePressed(e -> {
+            mouseX = e.getSceneX() - pallino.getCenterX();
+            mouseY = e.getSceneY() - pallino.getCenterY();
+        });
+
+        pallino.setOnMouseDragged(e -> {
+            double newCircleX = e.getSceneX() - mouseX;
+            double newCircleY = e.getSceneY() - mouseY;
+
+            pallino.setCenterX(newCircleX);
+            pallino.setCenterY(newCircleY);
+
+            numberText.setX(newCircleX - 5);
+            numberText.setY(newCircleY + 5);
+
+            for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
+                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
+                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+                selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
+                selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
+            }
+        });
     }
 
     @FXML
@@ -84,7 +108,8 @@ public class PannelloPrincipaleTree implements Initializable {
 
         String bullet = "\u2022"; // Codice Unicode per il carattere del punto
 
-        String contentText = bullet + "To insert a node select a node and click either 'Insert right node' or 'Insert left node'";
+        String contentText = bullet
+                + "To insert a node select a node and click either 'Insert right node' or 'Insert left node'";
 
         alert.setContentText(contentText);
 
@@ -131,6 +156,8 @@ public class PannelloPrincipaleTree implements Initializable {
         node.setCenterY(selectedPallino.getCenterY() + 60);
 
         tree.addNode(figlio);
+        selectedNode.set_nNodes();
+
         selectedNode.setFiglioSx(figlio.getIndiceNodo());
         Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
         numberText.setFill(Color.WHITE);
@@ -153,8 +180,37 @@ public class PannelloPrincipaleTree implements Initializable {
         Line connectionLine = new Line(
                 selectedPallino.getCenterX(), selectedPallino.getCenterY(),
                 node.getCenterX(), node.getCenterY());
+
+        selectedNode.setLine(connectionLine);
+        figlio.setLine(connectionLine);
+        selectedNode.setVicino(figlio);
+        figlio.setVicino(selectedNode);
+
         pane.getChildren().add(connectionLine);
         connectionLine.toBack();
+
+        node.setOnMousePressed(e -> {
+            mouseX = e.getSceneX() - node.getCenterX();
+            mouseY = e.getSceneY() - node.getCenterY();
+        });
+
+        node.setOnMouseDragged(e -> {
+            double newCircleX = e.getSceneX() - mouseX;
+            double newCircleY = e.getSceneY() - mouseY;
+
+            node.setCenterX(newCircleX);
+            node.setCenterY(newCircleY);
+
+            numberText.setX(newCircleX - 5);
+            numberText.setY(newCircleY + 5);
+
+            for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
+                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
+                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+                selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
+                selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
+            }
+        });
     }
 
     @FXML
@@ -177,6 +233,11 @@ public class PannelloPrincipaleTree implements Initializable {
         node.setCenterY(selectedPallino.getCenterY() + 60);
         Node figlio = new Node(++indici, node); // Crea il nodo
         tree.addNode(figlio); // Lo aggiunge all'albero
+
+        selectedNode.set_nNodes();
+        selectedNode.setVicino(figlio);
+        figlio.setVicino(selectedNode);
+
         selectedNode.setFiglioDx(figlio.getIndiceNodo());
         Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
         numberText.setFill(Color.WHITE);
@@ -201,9 +262,35 @@ public class PannelloPrincipaleTree implements Initializable {
         Line connectionLine = new Line(
                 selectedPallino.getCenterX(), selectedPallino.getCenterY(),
                 node.getCenterX(), node.getCenterY());
+
+        selectedNode.setLine(connectionLine);
+        figlio.setLine(connectionLine);
+
         pane.getChildren().add(connectionLine);
         connectionLine.toBack();
+        
+        node.setOnMousePressed(e -> {
+            mouseX = e.getSceneX() - node.getCenterX();
+            mouseY = e.getSceneY() - node.getCenterY();
+        });
 
+        node.setOnMouseDragged(e -> {
+            double newCircleX = e.getSceneX() - mouseX;
+            double newCircleY = e.getSceneY() - mouseY;
+
+            node.setCenterX(newCircleX);
+            node.setCenterY(newCircleY);
+
+            numberText.setX(newCircleX - 5);
+            numberText.setY(newCircleY + 5);
+
+            for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
+                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
+                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+                selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
+                selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
+            }
+        });
     }
 
     @FXML
@@ -281,33 +368,5 @@ public class PannelloPrincipaleTree implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         onStart();
-        /*
-         * pane.setOnScroll(event -> {
-         * if (event.isControlDown()) { // Controlla se il tasto Ctrl è premuto
-         * double zoomFactor = 1.05; // Fattore di zoom (puoi regolare questo valore)
-         * 
-         * if (event.getDeltaY() < 0) {
-         * // Zoom out
-         * zoomFactor = 1 / zoomFactor;
-         * }
-         * 
-         * // Effettua il zoom all'interno del pannello
-         * pane.setScaleX(pane.getScaleX() * zoomFactor);
-         * pane.setScaleY(pane.getScaleY() * zoomFactor);
-         * 
-         * // Aggiorna lo stato del zoom corrente
-         * currentZoom *= zoomFactor;
-         * 
-         * // Impedisce il passaggio a livelli di zoom troppo piccoli o grandi
-         * if (currentZoom < 0.1) {
-         * currentZoom = 0.1;
-         * } else if (currentZoom > 10) {
-         * currentZoom = 10;
-         * }
-         * 
-         * event.consume(); // Impedisce la propagazione dell'evento
-         * }
-         * });
-         */
     }
 }
