@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -141,5 +142,79 @@ public class GraphAlgorithms {
         result.put("vertici", listaDiVertici);
 
         return result;
+    }
+
+    public ArrayList<Edge> executeKruskal(Graph graph) {
+        ArrayList<Edge> archiOrdinati = prendiArchiOrdinati(graph);
+        ArrayList<ArrayList<Vertex>> vertexs = new ArrayList<>(); // struttura per contenere gli alberi
+        ArrayList<Edge> mstEdges = new ArrayList<>(); // Archi dell'MST
+        Collections.sort(archiOrdinati);
+
+        for (Edge edge : archiOrdinati) {
+            ArrayList<Vertex> albero1 = null;
+            ArrayList<Vertex> albero2 = null;
+
+            // Trova gli alberi contenenti i vertici dell'arco
+            for (ArrayList<Vertex> tree : vertexs) {
+                if (tree.contains(edge.getV1())) {
+                    albero1 = tree;
+                }
+                if (tree.contains(edge.getV2())) {
+                    albero2 = tree;
+                }
+            }
+
+            if (albero1 != albero2) {
+                if (albero1 != null && albero2 != null) {
+                    albero1.addAll(albero2);
+                    vertexs.remove(albero2);
+                } else if (albero1 != null) {
+                    albero1.add(edge.getV2());
+                } else if (albero2 != null) {
+                    albero2.add(edge.getV1());
+                } else {
+                    ArrayList<Vertex> nuovoAlbero = new ArrayList<>();
+                    nuovoAlbero.add(edge.getV1());
+                    nuovoAlbero.add(edge.getV2());
+                    vertexs.add(nuovoAlbero);
+                }
+                mstEdges.add(edge); // Aggiungi l'arco all'MST
+            } else if (albero1 == null && albero2 == null) {
+                ArrayList<Vertex> nuovoAlbero = new ArrayList<>();
+                nuovoAlbero.add(edge.getV1());
+                nuovoAlbero.add(edge.getV2());
+                vertexs.add(nuovoAlbero);
+                mstEdges.add(edge); // Aggiungi l'arco all'MST
+
+            }
+        }
+        for (ArrayList<Vertex> v : vertexs) {
+            for (Vertex vertex : v) {
+                System.out.print(vertex.getIndiceVertice() + " ");
+            }
+            System.out.println("");
+        }
+        System.out.println(mstEdges.size());
+        for (Edge edge : mstEdges) {
+            System.out.print(edge.getWeight() + " ");
+        }
+        System.out.println(" ");
+        return mstEdges;
+    }
+
+    private ArrayList<Edge> prendiArchiOrdinati(Graph graph) {
+        ArrayList<Edge> edges = new ArrayList<>();
+        HashSet<Edge> uniqueEdges = new HashSet<>(); // Utilizziamo un HashSet per mantenere archi unici
+        for (Vertex v : graph.getGraph()) {
+            ArrayList<Edge> archi = v.getEdges();
+            for (Edge edge : archi) {
+                if (uniqueEdges.add(edge)) {
+                    // L'arco non era presente nel set, quindi lo aggiungiamo sia al set che
+                    // all'elenco
+                    edges.add(edge);
+                }
+            }
+        }
+        return edges;
     }
 }

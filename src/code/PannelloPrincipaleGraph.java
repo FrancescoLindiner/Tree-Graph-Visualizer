@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -22,8 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
@@ -31,7 +27,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -50,7 +45,7 @@ public class PannelloPrincipaleGraph implements Initializable {
     private Circle selectedPallino, selectedPallino2; // Variabile per memorizzare il pallino selezionato
     private Vertex selectedVertex, dijkstraVertex;
     private double mouseX, mouseY; // Store the initial mouse click position
-    private boolean isDragging = false;
+    // private boolean isDragging = false;
     private Vertex secondVertex;
     GraphAlgorithms graphAlgorithms = new GraphAlgorithms();
 
@@ -148,13 +143,17 @@ public class PannelloPrincipaleGraph implements Initializable {
 
     @FXML
     void buttonInsertNode(ActionEvent event) {
+        Random rand = new Random();
+
         Circle vertexCircle = new Circle(20, Color.BLUE);
         Vertex vertex = new Vertex(indici++, vertexCircle);
         Edge edge;
-        if (!inputField.getText().equals("")) {
-            edge = new Edge(Integer.parseInt(inputField.getText()), selectedVertex, vertex);
+        int weightRandom = -1;
+        if (inputField.getText().equals("")) {
+            weightRandom = rand.nextInt(5)+10;
+            edge = new Edge(weightRandom, selectedVertex, vertex);
         } else {
-            edge = new Edge(0, selectedVertex, vertex);
+            edge = new Edge(Integer.parseInt(inputField.getText()), selectedVertex, vertex);
         }
         vertex.setEdge(edge);
         selectedVertex.setEdge(edge);
@@ -205,8 +204,12 @@ public class PannelloPrincipaleGraph implements Initializable {
         double weightTextX = (selectedPallino.getCenterX() + vertexCircle.getCenterX()) / 2;
         double weightTextY = (selectedPallino.getCenterY() + vertexCircle.getCenterY()) / 2 - 10;
 
-        Text weightText = new Text(weightTextX, weightTextY, inputField.getText());
-
+        Text weightText;
+        if (inputField.getText().equals("")) {
+            weightText = new Text(weightTextX, weightTextY, Integer.toString(weightRandom));
+        } else {
+            weightText = new Text(weightTextX, weightTextY, inputField.getText());
+        }
         pane.getChildren().addAll(connectionLine, weightText);
         connectionLine.toBack();
 
@@ -242,51 +245,65 @@ public class PannelloPrincipaleGraph implements Initializable {
                         .setY((selectedVertex.getLine(i).getStartY() + selectedVertex.getLine(i).getEndY()) / 2 - 10);
 
             }
-            isDragging = true;
+            // isDragging = true;
 
         });
 
-        vertexCircle.setOnMouseReleased(e -> {
-            if (isDragging) {
-                isDragging = false;
-            }
-        });
     }
 
     @FXML
     void buttonKruskal(ActionEvent event) {
-
+        ArrayList<Edge> mst = graphAlgorithms.executeKruskal(graph);
+        for (Edge edge : mst) {
+            edge.getV1().getCircle().setFill(Color.RED);
+            edge.getV2().getCircle().setFill(Color.RED);
+            ArrayList<Line> lines1 = edge.getV1().getLine();
+            ArrayList<Line> lines2 = edge.getV2().getLine();
+            Line line = lines1.get(0);
+            for (Line line1 : lines1) {
+                for (Line line2 : lines2) {
+                    if (line1 == line2) {
+                        line = line1;
+                    }
+                }
+            }
+            line.setStroke(Color.GREEN);
+            for (Line l : lines1) {
+                if (l.getStroke() != Color.GREEN) {
+                    l.setStroke(Color.LIGHTGRAY);
+                }
+            }
+        }
     }
 
     @FXML
-void buttonPrim(ActionEvent event) {
-    Timeline timeline = new Timeline();
-    double frameDurationMillis = 700; // Adjust frame duration in milliseconds as needed
+    void buttonPrim(ActionEvent event) {
+        Timeline timeline = new Timeline();
+        double frameDurationMillis = 700; // Adjust frame duration in milliseconds as needed
 
-    Map<String, List<?>> result = graphAlgorithms.executePrim(selectedVertex, graph);
-    List<Vertex> vertexList = (List<Vertex>) result.get("vertici");
+        Map<String, List<?>> result = graphAlgorithms.executePrim(selectedVertex, graph);
+        List<Vertex> vertexList = (List<Vertex>) result.get("vertici");
 
-    for (int i = 0; i < vertexList.size(); i++) {
-        final int index = i;
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(index * frameDurationMillis), e -> {
-            Vertex vertex = vertexList.get(index);
-            vertex.getCircle().setFill(Color.RED);
-            log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
+        for (int i = 0; i < vertexList.size(); i++) {
+            final int index = i;
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(index * frameDurationMillis), e -> {
+                Vertex vertex = vertexList.get(index);
+                vertex.getCircle().setFill(Color.RED);
+                log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
 
-            // Aggiungi un ritardo per l'istruzione specifica
-            PauseTransition pauseTransition = new PauseTransition(Duration.millis(300));
-            pauseTransition.setOnFinished(ev -> {
-                vertex.getLine(0).setStroke(Color.RED);
+                // Aggiungi un ritardo per l'istruzione specifica
+                PauseTransition pauseTransition = new PauseTransition(Duration.millis(300));
+                pauseTransition.setOnFinished(ev -> {
+                    vertex.getLine(0).setStroke(Color.RED);
+                });
+                pauseTransition.play();
             });
-            pauseTransition.play();
-        });
-        timeline.getKeyFrames().add(keyFrame);
+            timeline.getKeyFrames().add(keyFrame);
+        }
+
+        timeline.setCycleCount(1);
+        timeline.play();
     }
-
-    timeline.setCycleCount(1);
-    timeline.play();
-}
-
 
     void buttonInsertRandomNode(ActionEvent event, double d, double f, int weight) {
         Circle vertexCircle = new Circle(20, Color.BLUE);
@@ -295,7 +312,7 @@ void buttonPrim(ActionEvent event) {
         if (inputField.getText().equals("")) {
             edge = new Edge(weight, selectedVertex, vertex);
         } else {
-            edge = new Edge(weight, selectedVertex, vertex);
+            edge = new Edge(Integer.parseInt(inputField.getText()), selectedVertex, vertex);
         }
         vertex.setEdge(edge);
         selectedVertex.setEdge(edge);
@@ -385,15 +402,10 @@ void buttonPrim(ActionEvent event) {
                         .setY((selectedVertex.getLine(i).getStartY() + selectedVertex.getLine(i).getEndY()) / 2 - 10);
 
             }
-            isDragging = true;
+            // isDragging = true;
 
         });
 
-        vertexCircle.setOnMouseReleased(e -> {
-            if (isDragging) {
-                isDragging = false;
-            }
-        });
     }
 
     @FXML
@@ -432,9 +444,15 @@ void buttonPrim(ActionEvent event) {
     }
 
     private boolean checkVertex(Vertex randomVertex1, Vertex randomVertex2) {
-        ArrayList<Edge> vicini = randomVertex1.getEdges();
-        if (vicini.contains(randomVertex2.getEdges())) {
-            return true;
+        ArrayList<Edge> vicini1 = randomVertex1.getEdges();
+        ArrayList<Edge> vicini2 = randomVertex2.getEdges();
+
+        for (Edge edge : vicini1) {
+            for (Edge edge2 : vicini2) {
+                if (edge == edge2) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -443,9 +461,17 @@ void buttonPrim(ActionEvent event) {
 
     private void addConnection(Vertex randomVertex, Vertex randomVertex2) {
         int weight = rand.nextInt(20) + 5;
-        Edge edge = new Edge(weight, randomVertex, randomVertex2);
-        Edge edge2 = new Edge(weight, randomVertex2, randomVertex);
 
+        Edge edge;
+        // Edge edge2;
+        if (inputField.getText().equals("")) {
+            edge = new Edge(weight, randomVertex, randomVertex2);
+            // edge2 = new Edge(weight, randomVertex2, randomVertex);
+        } else {
+            edge = new Edge(Integer.parseInt(inputField.getText()), randomVertex, randomVertex2);
+            // edge2 = new Edge(Integer.parseInt(inputField.getText()), randomVertex2,
+            // randomVertex);
+        }
         Line connectionLine = new Line(randomVertex.getCircle().getCenterX(), randomVertex.getCircle().getCenterY(),
                 randomVertex2.getCircle().getCenterX(), randomVertex2.getCircle().getCenterY());
 
@@ -464,7 +490,7 @@ void buttonPrim(ActionEvent event) {
         randomVertex.setLine(connectionLine, numberText);
 
         randomVertex2.setVicino(randomVertex);
-        randomVertex2.setEdge(edge2);
+        randomVertex2.setEdge(edge);
         randomVertex2.setLine(connectionLine, numberText);
 
         pane.getChildren().addAll(connectionLine, numberText);
@@ -527,6 +553,7 @@ void buttonPrim(ActionEvent event) {
             selectedPallino = vertexCircle;
             vertexCircle.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
+
         });
 
         vertexCircle.setOnMousePressed(e -> {
@@ -541,7 +568,7 @@ void buttonPrim(ActionEvent event) {
             vertexCircle.setCenterX(newCircleX);
             vertexCircle.setCenterY(newCircleY);
 
-            numberText.setX(newCircleX - 5); // Update x coordinate of the index text
+            numberText.setX(newCircleX - 5);
             numberText.setY(newCircleY + 5);
 
             for (int i = 0; i < selectedVertex.getSizeVicini(); i++) {
@@ -554,16 +581,9 @@ void buttonPrim(ActionEvent event) {
                 selectedVertex.getWeight(selectedVertex.getLine(i))
                         .setY((selectedVertex.getLine(i).getStartY() + selectedVertex.getLine(i).getEndY()) / 2 - 10);
             }
-            isDragging = true;
+            // isDragging = true;
 
         });
 
-        vertexCircle.setOnMouseReleased(e -> {
-            if (isDragging) {
-                isDragging = false;
-                // Perform any necessary updates after dragging ends
-                // For example, updating vertex positions in your graph data structure
-            }
-        });
     }
 }

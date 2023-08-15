@@ -2,7 +2,7 @@ package code;
 
 import javafx.scene.paint.Color;
 
-public class Edge {
+public class Edge implements Comparable<Edge> {
     
     private int weight;
     private Vertex v1, v2;
@@ -32,5 +32,10 @@ public class Edge {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    @Override
+    public int compareTo(Edge o) {
+        return Integer.compare(this.weight, o.weight);
     }
 }
