@@ -106,9 +106,9 @@ public class Tree {
             double y1 = node.circle.getCenterY();
             // double distance = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
             if (node != n && (x == x1 && y == y1)) {
-                if ((x + 10 > x1 - 10) || (x - 10 < x1 + 10) || (x1 + 10 > x - 10) || (x1 - 10 < x + 10)) {
-                    overlap = false;
-                }
+
+                overlap = false;
+
             }
         }
         return overlap;

@@ -178,6 +178,13 @@ public class PannelloPrincipaleTree implements Initializable {
             log.appendText("Node's childrens " + selectedNode.getPuntatoreFiglioSx() + " - "
                     + selectedNode.getPuntatoreFiglioDx() + "\n");
 
+            System.out.println("Centro X: " + figlio.circle.getCenterX());
+            System.out.println("Centro Y: " + figlio.circle.getCenterY());
+            double x = figlio.circle.getCenterX() + 10;
+            double y = figlio.circle.getCenterX() - 10;
+            System.out.println("Cerchio X + 10: " + x);
+            System.out.println("Cechio Y - 10: " + y);
+
             node.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
             selectedPallino = node;
@@ -225,16 +232,26 @@ public class PannelloPrincipaleTree implements Initializable {
 
     private void changePositionLine(Node figlio) {
 
-        for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
+        for (int i = 0; i < selectedNode.getSizeVicini(); i++) { // per spostare le linee dei figli
             selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
             selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
             selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
             selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
         }
         ArrayList<Node> figli = selectedNode.getFigli();
-        for (Node node : figli) {
+        for (Node node : figli) { // per spostare i number text
             node.getNumberText().setX(node.circle.getCenterX() - 5);
             node.getNumberText().setY(node.circle.getCenterY() + 5);
+        }
+
+        for (Node node : figli) { // per spostare le linee dei figli dei digli
+            for (int i = 0; i < node.getSizeVicini(); i++) {
+                node.getLine(i).setStartX(node.circle.getCenterX());
+                node.getLine(i).setStartY(node.circle.getCenterY());
+                node.getLine(i).setEndX(node.getVicino(i).getCenterX());
+                node.getLine(i).setEndY(node.getVicino(i).getCenterY());
+
+            }
         }
     }
 
