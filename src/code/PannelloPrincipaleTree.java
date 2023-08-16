@@ -34,7 +34,6 @@ public class PannelloPrincipaleTree implements Initializable {
     Stage stage;
     Scene scene;
     private double mouseX, mouseY; // Store the initial mouse click position
-    static int x = 0;
     static int livello = 0;
 
     @FXML
@@ -158,14 +157,12 @@ public class PannelloPrincipaleTree implements Initializable {
         Node figlio = new Node(++indici, node);
 
         int numFigli = selectedNode.get_nNode();
-        int x = getCoordinateX(numFigli);
-
-        node.setCenterX(selectedPallino.getCenterX() - x);
-        node.setCenterY(selectedPallino.getCenterY() + 70);
 
         tree.addNode(figlio);
         selectedNode.setFigli(figlio);
         selectedNode.set_nNodes();
+
+        changePosition(numFigli);
 
         Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
         numberText.setFill(Color.WHITE);
@@ -173,6 +170,7 @@ public class PannelloPrincipaleTree implements Initializable {
         numberText.setY(node.getCenterY() + 5);
         figlio.setNumberText(numberText);
         pane.getChildren().addAll(node, numberText);
+
         log.appendText("Add node " + figlio.getIndiceNodo() + "\n");
         node.setOnMouseClicked(e -> {
             selectedNode = figlio;
@@ -194,6 +192,8 @@ public class PannelloPrincipaleTree implements Initializable {
         figlio.setLine(connectionLine);
         selectedNode.setVicino(figlio);
         figlio.setVicino(selectedNode);
+
+        changePositionLine(figlio);
 
         pane.getChildren().add(connectionLine);
         connectionLine.toBack();
@@ -223,25 +223,59 @@ public class PannelloPrincipaleTree implements Initializable {
         return figlio;
     }
 
-    private int getCoordinateX(int numFigli) {
-        if (numFigli == 0) {
-            x = 0;
-            return 0;
-        } else if (numFigli == 1) {
-            x += 55;
-            return x;
-        } else if (numFigli == 2) {
-            x = -55;
-            return x;
-        } else if (numFigli % 2 == 0) {
-            x = -x;
-            return x;
-        } else {
-            x = Math.abs(x);
-            x += 50;
-            return x;
+    private void changePositionLine(Node figlio) {
+
+        for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
+            selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
+            selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+            selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
+            selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
+        }
+        ArrayList<Node> figli = selectedNode.getFigli();
+        for (Node node : figli) {
+            node.getNumberText().setX(node.circle.getCenterX() - 5);
+            node.getNumberText().setY(node.circle.getCenterY() + 5);
         }
     }
+
+    private void changePosition(int numFigli) {
+        int x;
+        ArrayList<Node> figli = selectedNode.getFigli();
+        if (numFigli == 0) {
+            x = 0;
+        } else {
+            x = 50 * numFigli;
+        }
+
+        for (Node node : figli) {
+            node.circle.setCenterX(selectedNode.circle.getCenterX() - x);
+            node.circle.setCenterY(selectedNode.circle.getCenterY() + 70);
+            x -= 100;
+
+        }
+    }
+
+    /*
+     * private int getCoordinateX(int numFigli) {
+     * if (numFigli == 0) {
+     * x = 0;
+     * return 0;
+     * } else if (numFigli == 1) {
+     * x += 55;
+     * return x;
+     * } else if (numFigli == 2) {
+     * x = -55;
+     * return x;
+     * } else if (numFigli % 2 == 0) {
+     * x = -x;
+     * return x;
+     * } else {
+     * x = Math.abs(x);
+     * x += 50;
+     * return x;
+     * }
+     * }
+     */
 
     void generateLeftNode() {
         Circle node = new Circle(20, Color.BLUE);

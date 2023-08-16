@@ -30,8 +30,9 @@ public class DFS {
                 node.setColor();
                 
                 ArrayList<Node> figli = node.getFigli();
-                for (Node node2 : figli) {
-                    stack.push(node2);
+                int size = figli.size();
+                for (int i = size-1; i>=0; i--) { // il ciclo va all'indietro per far partire l'algoritmo dal nodo più a sinistra
+                    stack.push(figli.get(i));
                 }
                 
             }

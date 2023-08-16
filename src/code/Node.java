@@ -35,6 +35,10 @@ public class Node {
         return this.figli;
     }
 
+    public int getNumFigli() {
+        return this.figli.size();
+    }
+
     public void setNumberText(Text numberText) {
         this.numberText = numberText;
     }
