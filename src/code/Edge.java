@@ -5,8 +5,8 @@ import javafx.scene.paint.Color;
 public class Edge implements Comparable<Edge> {
     
     private int weight;
-    private Vertex v1, v2;
-    private Color color; // Aggiungi l'attributo colore
+    private Vertex v1, v2; // v1 & v2 are the vertices of the edge
+    private Color color;
 
     public Edge(int weight, Vertex v1, Vertex v2) {
         this.weight = weight;
@@ -35,7 +35,7 @@ public class Edge implements Comparable<Edge> {
     }
 
     @Override
-    public int compareTo(Edge o) {
+    public int compareTo(Edge o) { // to sorting the edge for the kruskal algorithm
         return Integer.compare(this.weight, o.weight);
     }
 }

@@ -11,14 +11,6 @@
 
 <Pane fx:id="button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: grey;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipaleTree">
    <children>
-      <Button fx:id="button" layoutX="700.0" layoutY="576.0" mnemonicParsing="false" onAction="#buttonInsertRightNode" prefHeight="45.0" prefWidth="178.0" text="INSERT RIGHT NODE">
-         <effect>
-            <DropShadow />
-         </effect></Button>
-      <Button fx:id="button" layoutX="700.0" layoutY="522.0" mnemonicParsing="false" onAction="#buttonInsertLeftNode" prefHeight="45.0" prefWidth="178.0" text="INSERT LEFT NODE">
-         <effect>
-            <DropShadow />
-         </effect></Button>
       <Button fx:id="button" layoutX="101.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
          <effect>
             <DropShadow />

@@ -42,12 +42,12 @@ public class PannelloPrincipaleGraph implements Initializable {
     Scene scene;
     static int indici = 0;
     Graph graph = new Graph();
-    private Circle selectedPallino, selectedPallino2; // Variabile per memorizzare il pallino selezionato
+    private Circle selectedPallino, selectedPallino2; // variable to memorize the selected circle
     private Vertex selectedVertex, dijkstraVertex;
     private double mouseX, mouseY; // Store the initial mouse click position
-    // private boolean isDragging = false;
-    private Vertex secondVertex;
+    private Vertex secondVertex; // second vertex when you want to connect two vertices
     GraphAlgorithms graphAlgorithms = new GraphAlgorithms();
+    Random rand = new Random();
 
     @FXML
     private Button button;
@@ -93,7 +93,7 @@ public class PannelloPrincipaleGraph implements Initializable {
                 + bullet
                 + " To connect two nodes, select a first node, then hold the 'Ctrl' key and select the second node\n"
                 + bullet
-                + " Dijkstra: To calculate the minimum path to a destination node, hold the 'Shift' key and select the node";
+                + " Dijkstra: To calculate the minimum path to a destination node, select a node then hold the 'Shift' key and select the node";
 
         alert.setContentText(contentText);
 
@@ -122,35 +122,34 @@ public class PannelloPrincipaleGraph implements Initializable {
     @FXML
     void buttonDijkstra(ActionEvent event) {
         ArrayList<Vertex> path = graphAlgorithms.executeDijkstra(graph, selectedVertex, dijkstraVertex, log);
-
+        if (path == null) {
+            log.appendText("The graph contains edges with negative costs");
+            return;
+        }
         Timeline timeline = new Timeline();
 
-        double frameDurationMillis = 500; // Adjust frame duration in milliseconds as needed
+        double frameDurationMillis = 500;
 
         for (int i = 0; i < path.size(); i++) {
-            final int index = i; // Cattura l'indice in una variabile finale
+            final int index = i;
             KeyFrame keyFrame = new KeyFrame(Duration.millis(index * frameDurationMillis), e -> {
                 path.get(index).getCircle().setFill(Color.RED);
             });
             timeline.getKeyFrames().add(keyFrame);
         }
 
-        timeline.setCycleCount(1); // Run the timeline indefinitely
+        timeline.setCycleCount(1);
         timeline.play();
     }
 
-    public boolean ctrlPressed = false;
-
     @FXML
     void buttonInsertNode(ActionEvent event) {
-        Random rand = new Random();
-
-        Circle vertexCircle = new Circle(20, Color.BLUE);
-        Vertex vertex = new Vertex(indici++, vertexCircle);
+        Circle vertexCircle = new Circle(20, Color.BLUE); // create the circle
+        Vertex vertex = new Vertex(indici++, vertexCircle); // create the vertex
         Edge edge;
         int weightRandom = -1;
-        if (inputField.getText().equals("")) {
-            weightRandom = rand.nextInt(5)+10;
+        if (inputField.getText().equals("")) { // if input field is empty weigth is random
+            weightRandom = rand.nextInt(41) - 20;
             edge = new Edge(weightRandom, selectedVertex, vertex);
         } else {
             edge = new Edge(Integer.parseInt(inputField.getText()), selectedVertex, vertex);
@@ -173,16 +172,16 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         pane.getChildren().addAll(vertexCircle, numberText);
 
-        log.appendText("Add vertex " + vertex.getIndiceVertice() + "\n");
+        log.appendText("Added vertex " + vertex.getIndiceVertice() + "\n");
 
         vertexCircle.setOnMouseClicked(e -> {
-            if (e.isControlDown()) {
+            if (e.isControlDown()) { // to add a connection
                 selectedPallino2 = vertexCircle;
                 secondVertex = vertex;
                 addConnection(secondVertex, selectedVertex);
                 return;
             }
-            if (e.isShiftDown()) {
+            if (e.isShiftDown()) { // to select the destination node for dijkstra
                 dijkstraVertex = vertex;
                 return;
                 // First is selectedVertex
@@ -196,7 +195,7 @@ public class PannelloPrincipaleGraph implements Initializable {
             selectedPallino = vertexCircle;
         });
 
-        // Disegna la linea che connette i nodi
+        // draw the line to connect the nodes
         Line connectionLine = new Line(selectedPallino.getCenterX(), selectedPallino.getCenterY(),
                 vertexCircle.getCenterX(), vertexCircle.getCenterY());
 
@@ -215,9 +214,6 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         vertex.setLine(connectionLine, weightText);
         selectedVertex.setLine(connectionLine, weightText);
-
-        System.out.println("Vertex " + vertex.getIndiceVertice() + "\nVertex " + selectedVertex.getIndiceVertice()
-                + "\nWeight " + inputField.getText());
 
         vertexCircle.setOnMousePressed(e -> {
             mouseX = e.getSceneX() - vertexCircle.getCenterX();
@@ -245,10 +241,7 @@ public class PannelloPrincipaleGraph implements Initializable {
                         .setY((selectedVertex.getLine(i).getStartY() + selectedVertex.getLine(i).getEndY()) / 2 - 10);
 
             }
-            // isDragging = true;
-
         });
-
     }
 
     @FXML
@@ -273,13 +266,18 @@ public class PannelloPrincipaleGraph implements Initializable {
                     l.setStroke(Color.LIGHTGRAY);
                 }
             }
+            for (Line l : lines2) {
+                if (l.getStroke() != Color.GREEN) {
+                    l.setStroke(Color.LIGHTGRAY);
+                }
+            }
         }
     }
 
     @FXML
     void buttonPrim(ActionEvent event) {
         Timeline timeline = new Timeline();
-        double frameDurationMillis = 700; // Adjust frame duration in milliseconds as needed
+        double frameDurationMillis = 700;
 
         Map<String, List<?>> result = graphAlgorithms.executePrim(selectedVertex, graph);
         List<Vertex> vertexList = (List<Vertex>) result.get("vertici");
@@ -291,7 +289,6 @@ public class PannelloPrincipaleGraph implements Initializable {
                 vertex.getCircle().setFill(Color.RED);
                 log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
 
-                // Aggiungi un ritardo per l'istruzione specifica
                 PauseTransition pauseTransition = new PauseTransition(Duration.millis(300));
                 pauseTransition.setOnFinished(ev -> {
                     vertex.getLine(0).setStroke(Color.RED);
@@ -332,7 +329,7 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         pane.getChildren().addAll(vertexCircle, numberText);
 
-        log.appendText("Add vertex " + vertex.getIndiceVertice() + "\n");
+        log.appendText("Added vertex " + vertex.getIndiceVertice() + "\n");
 
         vertexCircle.setOnMouseClicked(e -> {
             if (e.isControlDown()) {
@@ -355,14 +352,11 @@ public class PannelloPrincipaleGraph implements Initializable {
             selectedPallino = vertexCircle;
         });
 
-        // Disegna la linea che connette i nodi
         Line connectionLine = new Line(selectedPallino.getCenterX(), selectedPallino.getCenterY(),
                 vertexCircle.getCenterX(), vertexCircle.getCenterY());
 
-        // Calculate the position for the weight text node
         double weightTextX = (selectedPallino.getCenterX() + vertexCircle.getCenterX()) / 2;
-        double weightTextY = (selectedPallino.getCenterY() + vertexCircle.getCenterY()) / 2 - 10; // Adjust the Y
-                                                                                                  // position
+        double weightTextY = (selectedPallino.getCenterY() + vertexCircle.getCenterY()) / 2 - 10;
 
         Text weightText;
         if (inputField.getText().equals("")) {
@@ -402,10 +396,7 @@ public class PannelloPrincipaleGraph implements Initializable {
                         .setY((selectedVertex.getLine(i).getStartY() + selectedVertex.getLine(i).getEndY()) / 2 - 10);
 
             }
-            // isDragging = true;
-
         });
-
     }
 
     @FXML
@@ -416,7 +407,7 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         Timeline timeline = new Timeline();
 
-        double frameDurationMillis = 100; // Adjust frame duration in milliseconds as needed
+        double frameDurationMillis = 100;
 
         for (int i = 0; i < 10; i++) {
             KeyFrame keyFrame = new KeyFrame(Duration.millis(i * frameDurationMillis), e -> {
@@ -439,7 +430,7 @@ public class PannelloPrincipaleGraph implements Initializable {
             addConnection(randomVertex1, randomVertex2);
             log.appendText("Graph generated\n");
         });
-        timeline.setCycleCount(1); // Run the timeline indefinitely
+        timeline.setCycleCount(1);
         timeline.play();
     }
 
@@ -457,20 +448,14 @@ public class PannelloPrincipaleGraph implements Initializable {
         return false;
     }
 
-    Random rand = new Random();
-
     private void addConnection(Vertex randomVertex, Vertex randomVertex2) {
         int weight = rand.nextInt(20) + 5;
 
         Edge edge;
-        // Edge edge2;
         if (inputField.getText().equals("")) {
             edge = new Edge(weight, randomVertex, randomVertex2);
-            // edge2 = new Edge(weight, randomVertex2, randomVertex);
         } else {
             edge = new Edge(Integer.parseInt(inputField.getText()), randomVertex, randomVertex2);
-            // edge2 = new Edge(Integer.parseInt(inputField.getText()), randomVertex2,
-            // randomVertex);
         }
         Line connectionLine = new Line(randomVertex.getCircle().getCenterX(), randomVertex.getCircle().getCenterY(),
                 randomVertex2.getCircle().getCenterX(), randomVertex2.getCircle().getCenterY());
@@ -503,13 +488,11 @@ public class PannelloPrincipaleGraph implements Initializable {
         pane.getChildren().clear();
         log.clear();
 
-        // Reimposta le variabili allo stato iniziale
         indici = 0;
         selectedPallino = null;
         selectedVertex = null;
         graph = new Graph();
 
-        // Avvia nuovamente la scena
         onStart();
     }
 
@@ -530,7 +513,7 @@ public class PannelloPrincipaleGraph implements Initializable {
         numberText.setFill(Color.WHITE);
         numberText.setX(vertexCircle.getCenterX() - 5);
         numberText.setY(vertexCircle.getCenterY() + 5);
-        numberText.setFont(Font.font("Arial", FontWeight.BOLD, 16)); // Adjust the font size as needed
+        numberText.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
         pane.getChildren().addAll(vertexCircle, numberText);
 
@@ -581,9 +564,6 @@ public class PannelloPrincipaleGraph implements Initializable {
                 selectedVertex.getWeight(selectedVertex.getLine(i))
                         .setY((selectedVertex.getLine(i).getStartY() + selectedVertex.getLine(i).getEndY()) / 2 - 10);
             }
-            // isDragging = true;
-
         });
-
     }
 }

@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -19,6 +20,10 @@ public class Main extends Application {
         parent = FXMLLoader.load(getClass().getResource("../resources/PannelloPrincipale.fxml"));
         scene = new Scene(parent);
         stage.setScene(scene);
+
+        Image icon = new Image(getClass().getResourceAsStream("../resources/img/icona.png"));
+        stage.getIcons().add(icon);
+
         stage.centerOnScreen();
         stage.setTitle("Pannello principale");
         stage.setResizable(false);

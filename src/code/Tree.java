@@ -27,26 +27,6 @@ public class Tree {
         return tree.get(0);
     }
 
-    public Node getNodeSx(Node node) {
-        int indexToSearch = node.getPuntatoreFiglioSx();
-        for (Node n : tree) {
-            if (n.getIndiceNodo() == indexToSearch) {
-                return n;
-            }
-        }
-        return null;
-    }
-
-    public Node getNodeDx(Node node) {
-        int indexToSearch = node.getPuntatoreFiglioDx();
-        for (Node n : tree) {
-            if (n.getIndiceNodo() == indexToSearch) {
-                return n;
-            }
-        }
-        return null;
-    }
-
     public Node selectRandomNode() {
         Random rand = new Random();
         Node randomNode = null;
@@ -59,36 +39,9 @@ public class Tree {
         return randomNode;
     }
 
-    public boolean verificaNodo(Node selectedNode) {
-        Node father = getFather(selectedNode);
-
-        if (father.getPuntatoreFiglioDx() == selectedNode.getIndiceNodo()) {
-            Node leftChildern = tree.get(father.getPuntatoreFiglioSx());
-            if (leftChildern.getPuntatoreFiglioDx() == 0) {
-                return true;
-            }
-        } else {
-            Node rightChildern = tree.get(father.getPuntatoreFiglioDx());
-            if (rightChildern.getPuntatoreFiglioSx() == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Node getFather(Node selectedNode) {
-        for (Node node : tree) {
-            if (node.getPuntatoreFiglioDx() == selectedNode.getIndiceNodo()
-                    || node.getPuntatoreFiglioSx() == selectedNode.getIndiceNodo()) {
-                return node;
-            }
-        }
-        return null;
-    }
-
     public boolean checkX(int x) {
         for (Node node : tree) {
-            if (node.circle.getCenterX() == x) {
+            if (node.getCircle().getCenterX() == x) {
                 return false;
             }
         }
@@ -99,11 +52,11 @@ public class Tree {
         // devo scorrere tutto l'albero e vedere se le coordinate di n sono contenute
         // nelle coordinatae di qualche altro nodo
         boolean overlap = true;
-        double x = n.circle.getCenterX();
-        double y = n.circle.getCenterY();
+        double x = n.getCircle().getCenterX();
+        double y = n.getCircle().getCenterY();
         for (Node node : tree) {
-            double x1 = node.circle.getCenterX();
-            double y1 = node.circle.getCenterY();
+            double x1 = node.getCircle().getCenterX();
+            double y1 = node.getCircle().getCenterY();
             // double distance = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
             if (node != n && (x == x1 && y == y1)) {
 

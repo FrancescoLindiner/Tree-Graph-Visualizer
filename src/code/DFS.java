@@ -31,7 +31,7 @@ public class DFS {
                 
                 ArrayList<Node> figli = node.getFigli();
                 int size = figli.size();
-                for (int i = size-1; i>=0; i--) { // il ciclo va all'indietro per far partire l'algoritmo dal nodo più a sinistra
+                for (int i = size-1; i>=0; i--) { // the loop goes backwards to start the algorithm from the leftmost node
                     stack.push(figli.get(i));
                 }
                 

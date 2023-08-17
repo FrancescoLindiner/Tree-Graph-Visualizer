@@ -10,13 +10,12 @@ import javafx.scene.text.Text;
 public class Node {
 
     private int indiceNodo;
-    private int nNodes;
-    private int puntatoreFiglioSx, puntatoreFiglioDx;
-    Circle circle;
-    private ArrayList<Line> lines;
-    private ArrayList<Node> vicini;
-    private ArrayList<Node> figli;
-    private Text numberText;
+    private int nNodes; // number of children
+    private Circle circle;
+    private ArrayList<Line> lines; // lines incident at the node
+    private ArrayList<Node> vicini; //neightbots of the node, includes the father and the children
+    private ArrayList<Node> figli; // children of the node
+    private Text numberText; // text to insert the index at the center of the circle
 
     public Node(int indiceNodo, Circle circle) {
         this.indiceNodo = indiceNodo;
@@ -25,6 +24,10 @@ public class Node {
         lines = new ArrayList<>();
         vicini = new ArrayList<>();
         figli = new ArrayList<>();
+    }
+
+    public Circle getCircle() {
+        return this.circle;
     }
 
     public void setFigli(Node figlio) {
@@ -48,7 +51,7 @@ public class Node {
     }
 
     public void setColor() {
-        circle.setFill(Color.BROWN);
+        circle.setFill(Color.RED);
     }
 
     public void setVicino(Node node) {
@@ -75,7 +78,7 @@ public class Node {
         return vicini.get(index).circle;
     }
 
-    public void set_nNodes() {
+    public void set_nNodes() { // to increment the number of children
         this.nNodes++;
     }
 
@@ -85,22 +88,6 @@ public class Node {
 
     public int getIndiceNodo() {
         return this.indiceNodo;
-    }
-
-    public void setFiglioSx(int indiceFiglioSx) {
-        this.puntatoreFiglioSx = indiceFiglioSx;
-    }
-
-    public void setFiglioDx(int indiceFiglioDx) {
-        this.puntatoreFiglioDx = indiceFiglioDx;
-    }
-
-    public int getPuntatoreFiglioSx() {
-        return this.puntatoreFiglioSx;
-    }
-
-    public int getPuntatoreFiglioDx() {
-        return this.puntatoreFiglioDx;
     }
 
     @Override

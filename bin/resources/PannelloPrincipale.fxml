@@ -1,35 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="paneFirstScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipale">
+<Pane fx:id="paneFirstScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: white;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipale">
    <children>
-      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#4790d4e0" height="63.0" layoutX="341.0" layoutY="217.0" stroke="BLACK" strokeType="INSIDE" width="218.0" />
-      <Text layoutX="359.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select an option">
+      <ImageView fitHeight="601.0" fitWidth="459.0" layoutX="444.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/graph.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="601.0" fitWidth="459.0" layoutX="4.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/tree.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="buttonGraph" layoutX="615.0" layoutY="319.0" mnemonicParsing="false" onAction="#buttonGraph" prefHeight="63.0" prefWidth="114.0" text="GRAPH">
+         <effect>
+            <DropShadow />
+         </effect>
          <font>
-            <Font name="Arial Rounded MT Bold" size="23.0" />
+            <Font size="17.0" />
          </font>
-      </Text>
-      <Button fx:id="buttonGraph" layoutX="539.0" layoutY="319.0" mnemonicParsing="false" onAction="#buttonGraph" prefHeight="63.0" prefWidth="114.0" text="GRAPH">
+      </Button>
+      <Button fx:id="buttonTree" layoutX="169.0" layoutY="319.0" mnemonicParsing="false" onAction="#buttonTree" prefHeight="63.0" prefWidth="114.0" text="TREE">
          <effect>
             <DropShadow />
          </effect>
       </Button>
-      <Button fx:id="buttonTree" layoutX="245.0" layoutY="319.0" mnemonicParsing="false" onAction="#buttonTree" prefHeight="63.0" prefWidth="114.0" text="TREE">
+      <Rectangle id="rectangle" fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#4790d4e0" height="63.0" layoutX="226.0" layoutY="9.0" stroke="BLACK" strokeType="INSIDE" width="446.0">
          <effect>
             <DropShadow />
-         </effect>
-      </Button>
-      <Rectangle id="rectangle" fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#4790d4e0" height="63.0" layoutX="226.0" layoutY="9.0" stroke="BLACK" strokeType="INSIDE" width="446.0" />
+         </effect></Rectangle>
       <Text fx:id="title" layoutX="233.0" layoutY="53.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Tree and graph visualizer">
          <font>
             <Font name="Arial Rounded MT Bold" size="35.0" />
          </font>
       </Text>
+      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="#4790d4e0" height="63.0" layoutX="341.0" layoutY="204.0" stroke="BLACK" strokeType="INSIDE" width="218.0">
+         <effect>
+            <DropShadow />
+         </effect></Rectangle>
+      <Text layoutX="359.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select an option">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="23.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="63.0" fitWidth="114.0" layoutX="10.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../icona.png" />
+         </image>
+         <effect>
+            <Blend />
+         </effect>
+      </ImageView>
    </children>
 </Pane>
