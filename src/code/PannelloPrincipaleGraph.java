@@ -22,7 +22,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -60,9 +59,6 @@ public class PannelloPrincipaleGraph implements Initializable {
 
     @FXML
     private ScrollPane scrollPane;
-
-    @FXML
-    private Slider slider;
 
     @FXML
     private TextField inputField;
@@ -121,6 +117,10 @@ public class PannelloPrincipaleGraph implements Initializable {
 
     @FXML
     void buttonDijkstra(ActionEvent event) {
+        if (dijkstraVertex == null) {
+            log.appendText("Select a destination\nvertex\n");
+            return;
+        }
         ArrayList<Vertex> path = graphAlgorithms.executeDijkstra(graph, selectedVertex, dijkstraVertex, log);
         if (path == null) {
             log.appendText("The graph contains edges with negative costs");
@@ -134,6 +134,7 @@ public class PannelloPrincipaleGraph implements Initializable {
             final int index = i;
             KeyFrame keyFrame = new KeyFrame(Duration.millis(index * frameDurationMillis), e -> {
                 path.get(index).getCircle().setFill(Color.RED);
+                path.get(index).getLine(0).setStroke(Color.GREEN);
             });
             timeline.getKeyFrames().add(keyFrame);
         }
