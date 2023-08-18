@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import javafx.scene.control.TextArea;
-import javafx.scene.shape.Line;
 
 public class GraphAlgorithms {
 
@@ -80,7 +79,6 @@ public class GraphAlgorithms {
 
         PriorityQueue<Vertex> queue = new PriorityQueue<>(
                 Comparator.comparingInt(vertex -> distance[vertex.getIndiceVertice()]));
-        ArrayList<Line> lines = new ArrayList<>();
         queue.add(selectedVertex);
 
         while (!queue.isEmpty()) {

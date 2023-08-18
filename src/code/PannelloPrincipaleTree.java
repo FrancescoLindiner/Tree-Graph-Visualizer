@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,12 +27,6 @@ import javafx.stage.Stage;
 
 public class PannelloPrincipaleTree implements Initializable {
 
-    Parent parent;
-    Stage stage;
-    Scene scene;
-    private double mouseX, mouseY; // Store the initial mouse click position
-    static int livello = 0;
-
     @FXML
     private Pane pane;
 
@@ -47,9 +40,17 @@ public class PannelloPrincipaleTree implements Initializable {
     private Slider slider;
 
     static int indici = 0;
-    private Circle selectedPallino; // Variabile per memorizzare il pallino selezionato
-    private Node selectedNode; // Variabile per memorizzare il nodo selezionato
+    private Circle selectedPallino;
+    private Node selectedNode;
     Tree tree = new Tree();
+    Parent parent;
+    Stage stage;
+    Scene scene;
+    private double mouseX, mouseY; // Store the initial mouse click position
+    static int livello = 0;
+
+    DFS dfs = new DFS();
+    BFS bfs = new BFS();
 
     public void onStart() {
         Circle pallino = new Circle(20, Color.BLUE);
@@ -103,10 +104,10 @@ public class PannelloPrincipaleTree implements Initializable {
         alert.setTitle("How to use the app");
         alert.setHeaderText(null);
 
-        String bullet = "\u2022"; // Codice Unicode per il carattere del punto
+        String bullet = "\u2022";
 
         String contentText = bullet
-                + "To insert a node select a node and click either 'Insert right node' or 'Insert left node'\n"
+                + "To insert a node select a node and click 'Insert node'\n"
                 + bullet + "You can move a node by double-clicking it and moving it with the mouse";
 
         alert.setContentText(contentText);
@@ -117,9 +118,6 @@ public class PannelloPrincipaleTree implements Initializable {
 
         alert.showAndWait();
     }
-
-    DFS dfs = new DFS();
-    BFS bfs = new BFS();
 
     @FXML
     void buttonIndietro(ActionEvent event) throws IOException {
@@ -151,23 +149,18 @@ public class PannelloPrincipaleTree implements Initializable {
         removeNodeAndDescendants(selectedNode);
     }
 
-    // Metodo ricorsivo per rimuovere un nodo e i suoi discendenti
     private void removeNodeAndDescendants(Node node) {
         ArrayList<Node> children = node.getFigli();
 
-        // Rimuovi il nodo e i suoi disegni associati
         pane.getChildren().remove(node.getCircle());
         pane.getChildren().remove(node.getLine(0));
         pane.getChildren().remove(node.getNumberText());
         tree.deleteNode(node);
 
-        // Chiamata ricorsiva per rimuovere i discendenti
         for (Node child : children) {
             removeNodeAndDescendants(child);
         }
 
-        // Eseguire questa parte per rimuovere il nodo selezionato e tutti i suoi
-        // discendenti
         Node padre = tree.getPadre(selectedNode);
         if (padre != null) {
             padre.removeFiglio(selectedNode);
@@ -208,7 +201,6 @@ public class PannelloPrincipaleTree implements Initializable {
             selectedPallino = node;
         });
 
-        // Disegna la linea che connette i nodi
         Line connectionLine = new Line(
                 selectedPallino.getCenterX(), selectedPallino.getCenterY(),
                 node.getCenterX(), node.getCenterY());
@@ -250,7 +242,7 @@ public class PannelloPrincipaleTree implements Initializable {
 
     private void changePositionLine(Node figlio) {
 
-        for (int i = 0; i < selectedNode.getSizeVicini(); i++) { // per spostare le linee dei figli
+        for (int i = 0; i < selectedNode.getSizeVicini(); i++) { // to move the children
             selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
             selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
             selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
@@ -262,7 +254,7 @@ public class PannelloPrincipaleTree implements Initializable {
             node.getNumberText().setY(node.getCircle().getCenterY() + 5);
         }
 
-        for (Node node : figli) { // per spostare le linee dei figli dei digli
+        for (Node node : figli) { // to move the children's children
             for (int i = 0; i < node.getSizeVicini(); i++) {
                 node.getLine(i).setStartX(node.getCircle().getCenterX());
                 node.getLine(i).setStartY(node.getCircle().getCenterY());
@@ -290,171 +282,21 @@ public class PannelloPrincipaleTree implements Initializable {
         }
     }
 
-    /*
-     * private int getCoordinateX(int numFigli) {
-     * if (numFigli == 0) {
-     * x = 0;
-     * return 0;
-     * } else if (numFigli == 1) {
-     * x += 55;
-     * return x;
-     * } else if (numFigli == 2) {
-     * x = -55;
-     * return x;
-     * } else if (numFigli % 2 == 0) {
-     * x = -x;
-     * return x;
-     * } else {
-     * x = Math.abs(x);
-     * x += 50;
-     * return x;
-     * }
-     * }
-     */
-
-    void generateLeftNode() {
-        Circle node = new Circle(20, Color.BLUE);
-        Node figlio = new Node(++indici, node);
-        // selectedPallino = figlio.circle;
-        node.setCenterX(selectedPallino.getCenterX() - 55);
-        node.setCenterY(selectedPallino.getCenterY() + 60);
-
-        tree.addNode(figlio);
-        selectedNode.set_nNodes();
-
-        Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
-        numberText.setFill(Color.WHITE);
-        numberText.setX(node.getCenterX() - 5);
-        numberText.setY(node.getCenterY() + 5);
-        pane.getChildren().addAll(node, numberText);
-        log.appendText("Add node " + figlio.getIndiceNodo() + "\n");
-        node.setOnMouseClicked(e -> {
-            selectedNode = figlio;
-            log.appendText("Nodo " + figlio.getIndiceNodo() + "\n");
-
-            node.setFill(Color.GREEN);
-            selectedPallino.setFill(Color.BLUE);
-            selectedPallino = node;
-        });
-
-        // Disegna la linea che connette i nodi
-        Line connectionLine = new Line(
-                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
-                node.getCenterX(), node.getCenterY());
-
-        selectedNode.setLine(connectionLine);
-        figlio.setLine(connectionLine);
-        selectedNode.setVicino(figlio);
-        figlio.setVicino(selectedNode);
-
-        pane.getChildren().add(connectionLine);
-        connectionLine.toBack();
-
-        node.setOnMousePressed(e -> {
-            mouseX = e.getSceneX() - node.getCenterX();
-            mouseY = e.getSceneY() - node.getCenterY();
-        });
-
-        node.setOnMouseDragged(e -> {
-            double newCircleX = e.getSceneX() - mouseX;
-            double newCircleY = e.getSceneY() - mouseY;
-
-            node.setCenterX(newCircleX);
-            node.setCenterY(newCircleY);
-
-            numberText.setX(newCircleX - 5);
-            numberText.setY(newCircleY + 5);
-
-            for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
-                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
-                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
-                selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
-                selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
-            }
-        });
-    }
-
-    void generateRightNode() {
-        Circle node = new Circle(20, Color.BLUE); // Crea il pallino colorato
-
-        node.setCenterX(selectedPallino.getCenterX() + 55);
-        node.setCenterY(selectedPallino.getCenterY() + 60);
-        Node figlio = new Node(++indici, node); // Crea il nodo
-        tree.addNode(figlio); // Lo aggiunge all'albero
-
-        selectedNode.set_nNodes();
-        selectedNode.setVicino(figlio);
-        figlio.setVicino(selectedNode);
-
-        Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
-        numberText.setFill(Color.WHITE);
-        numberText.setX(node.getCenterX() - 5); // Imposta la posizione X del testo all'interno del cerchio
-        numberText.setY(node.getCenterY() + 5);
-
-        pane.getChildren().addAll(node, numberText);
-
-        log.appendText("Add node " + figlio.getIndiceNodo() + "\n");
-        node.setOnMouseClicked(e -> {
-            selectedNode = figlio;
-            log.appendText("Nodo " + figlio.getIndiceNodo() + "\n");
-
-            node.setFill(Color.GREEN);
-            selectedPallino.setFill(Color.BLUE);
-            selectedPallino = node;
-        });
-
-        // Disegna la linea che connette i nodi
-        Line connectionLine = new Line(
-                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
-                node.getCenterX(), node.getCenterY());
-
-        selectedNode.setLine(connectionLine);
-        figlio.setLine(connectionLine);
-
-        pane.getChildren().add(connectionLine);
-        connectionLine.toBack();
-
-        node.setOnMousePressed(e -> {
-            mouseX = e.getSceneX() - node.getCenterX();
-            mouseY = e.getSceneY() - node.getCenterY();
-        });
-
-        node.setOnMouseDragged(e -> {
-            double newCircleX = e.getSceneX() - mouseX;
-            double newCircleY = e.getSceneY() - mouseY;
-
-            node.setCenterX(newCircleX);
-            node.setCenterY(newCircleY);
-
-            numberText.setX(newCircleX - 5);
-            numberText.setY(newCircleY + 5);
-
-            for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
-                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
-                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
-                selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
-                selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
-            }
-        });
-    }
-
     @FXML
     void buttonReset(ActionEvent event) {
         tree.deleteTree();
         pane.getChildren().clear();
         log.clear();
 
-        // Reimposta le variabili allo stato iniziale
+        // reset the variable at the initial state
         indici = 0;
         selectedPallino = null;
         selectedNode = null;
         tree = new Tree();
 
-        // Avvia nuovamente la scena
+        // start the scene
         onStart();
     }
-
-    private Timeline timeline;
 
     @FXML
     void buttonRandom(ActionEvent event) {
@@ -463,23 +305,10 @@ public class PannelloPrincipaleTree implements Initializable {
         Random random = new Random();
 
         log.appendText("Generating a tree...\n");
-        timeline = new Timeline();
 
         int randomDim = random.nextInt(4) + 3;
         selectedNode = tree.getRoot();
         selectedPallino = selectedNode.getCircle();
-        // ArrayList<Node> nodes = new ArrayList<>();
-
-        /*
-         * for (int i = 0; i < random.nextInt(4)+1; i++) {
-         * Node n = buttonInsertNode(event);
-         * nodes.add(n);
-         * }
-         * for (int i = 0; i < random.nextInt(4)+1; i++) {
-         * Node n = nodes.remove(0);
-         * buttonInsertNode(event);
-         * }
-         */
 
         for (int i = 0; i < randomDim; i++) {
             int randomChildren = random.nextInt(3) + 1;
@@ -495,45 +324,16 @@ public class PannelloPrincipaleTree implements Initializable {
             selectedNode = node;
             selectedPallino = selectedNode.getCircle();
         }
-
-        /*
-         * double frameDurationMillis = 100;
-         * for (int i = 0; i < randomDim; i++) {
-         * KeyFrame keyFrame = new KeyFrame(Duration.millis(i * frameDurationMillis), e
-         * -> {
-         * 
-         * int randomChildren = random.nextInt(3) + 1;
-         * System.out.println(randomChildren);
-         * for (int j = 1; j <= randomChildren; j++) {
-         * buttonInsertNode(event);
-         * Node node = tree.selectRandomNode();
-         * selectedNode = node;
-         * selectedPallino = selectedNode.circle;
-         * }
-         * });
-         * timeline.getKeyFrames().add(keyFrame);
-         * 
-         * }
-         * timeline.setOnFinished(e -> {
-         * log.appendText("Tree generated\n");
-         * });
-         * timeline.setCycleCount(1);
-         * timeline.play();
-         */
     }
 
     private void deleteNode(Node n) {
-        // Rimuovi il nodo e le linee dal Pane
-        pane.getChildren().removeAll(n.getCircle(), n.getNumberText()); // Rimuovi il cerchio e il testo dal Pane
+        pane.getChildren().removeAll(n.getCircle(), n.getNumberText());
         for (int i = 0; i < n.getSizeVicini(); i++) {
-            pane.getChildren().remove(n.getLine(i)); // Rimuovi le linee di connessione dal Pane
+            pane.getChildren().remove(n.getLine(i));
         }
 
-        // Rimuovi il nodo dall'albero
         tree.deleteNode(n);
 
-        // Eventualmente, reimposta il nodo selezionato e il pallino selezionato se
-        // necessario
         if (n == selectedNode) {
             selectedNode = null;
             selectedPallino = null;

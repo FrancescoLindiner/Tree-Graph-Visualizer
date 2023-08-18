@@ -49,19 +49,14 @@ public class Tree {
     }
 
     public boolean checkCoordianteNode(Node n) {
-        // devo scorrere tutto l'albero e vedere se le coordinate di n sono contenute
-        // nelle coordinatae di qualche altro nodo
         boolean overlap = true;
         double x = n.getCircle().getCenterX();
         double y = n.getCircle().getCenterY();
         for (Node node : tree) {
             double x1 = node.getCircle().getCenterX();
             double y1 = node.getCircle().getCenterY();
-            // double distance = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
             if (node != n && (x == x1 && y == y1)) {
-
                 overlap = false;
-
             }
         }
         return overlap;

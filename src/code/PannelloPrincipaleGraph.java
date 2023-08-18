@@ -246,29 +246,6 @@ public class PannelloPrincipaleGraph implements Initializable {
     }
 
     @FXML
-    void buttonDeleteVertex(ActionEvent event) {
-        ArrayList<Line> lines = selectedVertex.getLine();
-        for (Line line : lines) {
-            pane.getChildren().remove(line);
-        }
-
-        // Remove associated edges
-        ArrayList<Edge> edges = selectedVertex.getEdges();
-        for (Edge edge : edges) {
-            pane.getChildren().remove(edge);
-        }
-
-        // Remove vertex circle
-        pane.getChildren().remove(selectedVertex.getCircle());
-
-        // Remove vertex from graph
-        graph.deleteVertex(selectedVertex);
-
-        // Remove selectedPallino (if necessary)
-        pane.getChildren().remove(selectedPallino);
-    }
-
-    @FXML
     void buttonKruskal(ActionEvent event) {
         ArrayList<Edge> mst = graphAlgorithms.executeKruskal(graph);
         for (Edge edge : mst) {

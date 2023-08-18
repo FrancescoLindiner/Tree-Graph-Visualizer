@@ -71,13 +71,12 @@ public class Vertex {
     }
 
     public Text getNumberText() {
-        // Restituisci l'etichetta numerica associata a questo vertice (se presente)
         for (Map.Entry<Line, Text> entry : weights.entrySet()) {
             if (entry.getValue() != null) {
                 return entry.getValue();
             }
         }
-        return null; // Restituisci null se l'etichetta numerica non è presente
+        return null;
     }
 
     public ArrayList<Edge> getEdges() {
