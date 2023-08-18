@@ -158,6 +158,7 @@ public class PannelloPrincipaleTree implements Initializable {
         // Rimuovi il nodo e i suoi disegni associati
         pane.getChildren().remove(node.getCircle());
         pane.getChildren().remove(node.getLine(0));
+        pane.getChildren().remove(node.getNumberText());
         tree.deleteNode(node);
 
         // Chiamata ricorsiva per rimuovere i discendenti
@@ -173,6 +174,7 @@ public class PannelloPrincipaleTree implements Initializable {
         }
         pane.getChildren().remove(selectedNode.getLine(0));
         pane.getChildren().remove(selectedNode.getCircle());
+        pane.getChildren().remove(node.getNumberText());
         tree.deleteNode(selectedNode);
     }
 
