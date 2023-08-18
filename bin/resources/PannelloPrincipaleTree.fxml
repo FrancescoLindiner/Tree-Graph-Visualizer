@@ -11,7 +11,7 @@
 
 <Pane fx:id="button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: grey;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipaleTree">
    <children>
-      <Button fx:id="button" layoutX="101.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
+      <Button fx:id="button" layoutX="67.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
          <effect>
             <DropShadow />
          </effect></Button>
@@ -35,7 +35,7 @@
       </ScrollPane>
       <Slider fx:id="slider" layoutX="696.0" layoutY="661.0" max="10.0" min="0.3" prefHeight="28.0" prefWidth="178.0" value="1.0" />
       <Text layoutX="763.0" layoutY="663.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed" />
-      <Button fx:id="button" layoutX="271.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonRandom" prefHeight="45.0" prefWidth="131.0" text="RANDOM">
+      <Button fx:id="button" layoutX="197.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonRandom" prefHeight="45.0" prefWidth="131.0" text="RANDOM">
          <effect>
             <DropShadow />
          </effect>
@@ -60,7 +60,12 @@
             <DropShadow />
          </effect>
       </Button>
-      <Button fx:id="button" layoutX="481.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertNode" prefHeight="45.0" text="INSERT NODE">
+      <Button fx:id="button" layoutX="360.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertNode" prefHeight="45.0" text="INSERT NODE">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <Button fx:id="button" layoutX="520.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonDeleteNode" prefHeight="45.0" text="DELETE NODE">
          <effect>
             <DropShadow />
          </effect>

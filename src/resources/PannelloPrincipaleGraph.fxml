@@ -10,11 +10,11 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: grey;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.PannelloPrincipaleGraph">
    <children>
-      <Button fx:id="button" layoutX="470.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertNode" prefHeight="45.0" prefWidth="159.0" text="INSERT A NODE">
+      <Button fx:id="button" layoutX="327.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonInsertNode" prefHeight="45.0" prefWidth="159.0" text="INSERT A VERTEX">
          <effect>
             <DropShadow />
          </effect></Button>
-      <Button fx:id="button" layoutX="78.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
+      <Button fx:id="button" layoutX="31.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonReset" prefHeight="45.0" prefWidth="94.0" stylesheets="@style.css" text="RESET">
          <effect>
             <DropShadow />
          </effect></Button>
@@ -28,7 +28,7 @@
             <Pane fx:id="pane" prefHeight="586.0" prefWidth="678.0" style="-fx-background-color: white;" />
          </content>
       </ScrollPane>
-      <Button fx:id="button" layoutX="259.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonRandom" prefHeight="45.0" prefWidth="131.0" text="RANDOM">
+      <Button fx:id="button" layoutX="157.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonRandom" prefHeight="45.0" prefWidth="131.0" text="RANDOM">
          <effect>
             <DropShadow />
          </effect>
@@ -60,6 +60,11 @@
       </Button>
       <TextField fx:id="inputField" layoutX="715.0" layoutY="655.0" prefHeight="31.0" prefWidth="149.0" promptText="Insert a weight" />
       <Button fx:id="button" layoutX="854.0" layoutY="13.0" mnemonicParsing="false" onAction="#buttonInstruction" prefHeight="30.0" prefWidth="30.0" text="?">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <Button fx:id="button" layoutX="522.0" layoutY="648.0" mnemonicParsing="false" onAction="#buttonDeleteVertex" prefHeight="45.0" text="DELETE A VERTEX">
          <effect>
             <DropShadow />
          </effect>

@@ -94,4 +94,11 @@ public class Node {
     public String toString() {
         return "Indice nodo " + indiceNodo;
     }
+
+    public void removeFiglio(Node selectedNode) {
+        nNodes--;
+        lines.remove(selectedNode.getLine(0));
+        vicini.remove(selectedNode);
+        figli.remove(selectedNode);
+    }
 }

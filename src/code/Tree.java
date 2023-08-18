@@ -70,4 +70,16 @@ public class Tree {
     public void deleteNode(Node n) {
         tree.remove(n);
     }
+
+    public Node getPadre(Node selectedNode) {
+        for (Node node : tree) {
+            ArrayList<Node> figli = node.getFigli();
+            for (Node node2 : figli) {
+                if (node2 == selectedNode) {
+                    return node;
+                }
+            }
+        }
+        return null;
+    }
 }

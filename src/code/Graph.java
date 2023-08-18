@@ -3,6 +3,8 @@ package code;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javafx.scene.shape.Line;
+
 public class Graph {
 
     private ArrayList<Vertex> graph;
@@ -13,6 +15,10 @@ public class Graph {
 
     public void addVertex(Vertex vertex) {
         graph.add(vertex);
+    }
+
+    public void deleteVertex(Vertex vertex) {
+        graph.remove(vertex);
     }
 
     public void deleteGraph() {

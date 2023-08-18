@@ -147,6 +147,36 @@ public class PannelloPrincipaleTree implements Initializable {
     }
 
     @FXML
+    void buttonDeleteNode(ActionEvent event) {
+        removeNodeAndDescendants(selectedNode);
+    }
+
+    // Metodo ricorsivo per rimuovere un nodo e i suoi discendenti
+    private void removeNodeAndDescendants(Node node) {
+        ArrayList<Node> children = node.getFigli();
+
+        // Rimuovi il nodo e i suoi disegni associati
+        pane.getChildren().remove(node.getCircle());
+        pane.getChildren().remove(node.getLine(0));
+        tree.deleteNode(node);
+
+        // Chiamata ricorsiva per rimuovere i discendenti
+        for (Node child : children) {
+            removeNodeAndDescendants(child);
+        }
+
+        // Eseguire questa parte per rimuovere il nodo selezionato e tutti i suoi
+        // discendenti
+        Node padre = tree.getPadre(selectedNode);
+        if (padre != null) {
+            padre.removeFiglio(selectedNode);
+        }
+        pane.getChildren().remove(selectedNode.getLine(0));
+        pane.getChildren().remove(selectedNode.getCircle());
+        tree.deleteNode(selectedNode);
+    }
+
+    @FXML
     Node buttonInsertNode(ActionEvent event) {
         Circle node = new Circle(20, Color.BLUE);
         Node figlio = new Node(++indici, node);
