@@ -39,7 +39,7 @@ public class PannelloPrincipaleGraph implements Initializable {
     Parent parent;
     Stage stage;
     Scene scene;
-    static int indici = 0;
+    static int index = 0;
     Graph graph = new Graph();
     private Circle selectedPallino, selectedPallino2; // variable to memorize the selected circle
     private Vertex selectedVertex, dijkstraVertex;
@@ -103,9 +103,12 @@ public class PannelloPrincipaleGraph implements Initializable {
     @FXML
     void buttonBellmanFord(ActionEvent event) {
         log.appendText(
-                "-------------------------\nBellman-Ford\nFrom vertex " + selectedVertex.getIndiceVertice() + "\n");
+                "-------------------------\nBellman-Ford\nFrom vertex " + selectedVertex.getVertexIndex() + "\n");
         int[] distance = graphAlgorithms.executeBellmanFord(graph, selectedVertex);
-        int j = selectedVertex.getIndiceVertice();
+        if (distance == null) {
+            log.appendText("The graph has edges\nwith negative costs");
+        }
+        int j = selectedVertex.getVertexIndex();
         for (int i = 0; i < distance.length; i++) {
             log.appendText("To " + j + ": " + distance[j] + "\n");
             j++;
@@ -123,7 +126,7 @@ public class PannelloPrincipaleGraph implements Initializable {
         }
         ArrayList<Vertex> path = graphAlgorithms.executeDijkstra(graph, selectedVertex, dijkstraVertex, log);
         if (path == null) {
-            log.appendText("The graph contains edges with negative costs");
+            log.appendText("The graph contains edges\nwith negative costs");
             return;
         }
         Timeline timeline = new Timeline();
@@ -146,7 +149,7 @@ public class PannelloPrincipaleGraph implements Initializable {
     @FXML
     void buttonInsertNode(ActionEvent event) {
         Circle vertexCircle = new Circle(20, Color.BLUE); // create the circle
-        Vertex vertex = new Vertex(indici++, vertexCircle); // create the vertex
+        Vertex vertex = new Vertex(index++, vertexCircle); // create the vertex
         Edge edge;
         int weightRandom = -1;
         if (inputField.getText().equals("")) { // if input field is empty weigth is random
@@ -165,7 +168,7 @@ public class PannelloPrincipaleGraph implements Initializable {
         selectedVertex.setVicino(vertex);
         vertex.setVicino(selectedVertex);
 
-        Text numberText = new Text(Integer.toString(vertex.getIndiceVertice()));
+        Text numberText = new Text(Integer.toString(vertex.getVertexIndex()));
         numberText.setFill(Color.WHITE);
         numberText.setX(vertexCircle.getCenterX() - 5);
         numberText.setY(vertexCircle.getCenterY() + 5);
@@ -173,7 +176,7 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         pane.getChildren().addAll(vertexCircle, numberText);
 
-        log.appendText("Added vertex " + vertex.getIndiceVertice() + "\n");
+        log.appendText("Added vertex " + vertex.getVertexIndex() + "\n");
 
         vertexCircle.setOnMouseClicked(e -> {
             if (e.isControlDown()) { // to add a connection
@@ -189,7 +192,7 @@ public class PannelloPrincipaleGraph implements Initializable {
                 // Second is dijkstraVertex
             }
             selectedVertex = vertex;
-            log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
+            log.appendText("Vertex " + vertex.getVertexIndex() + "\n");
 
             vertexCircle.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
@@ -288,7 +291,7 @@ public class PannelloPrincipaleGraph implements Initializable {
             KeyFrame keyFrame = new KeyFrame(Duration.millis(index * frameDurationMillis), e -> {
                 Vertex vertex = vertexList.get(index);
                 vertex.getCircle().setFill(Color.RED);
-                log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
+                log.appendText("Vertex " + vertex.getVertexIndex() + "\n");
 
                 PauseTransition pauseTransition = new PauseTransition(Duration.millis(300));
                 pauseTransition.setOnFinished(ev -> {
@@ -305,7 +308,7 @@ public class PannelloPrincipaleGraph implements Initializable {
 
     void buttonInsertRandomNode(ActionEvent event, double d, double f, int weight) {
         Circle vertexCircle = new Circle(20, Color.BLUE);
-        Vertex vertex = new Vertex(indici++, vertexCircle);
+        Vertex vertex = new Vertex(index++, vertexCircle);
         Edge edge;
         if (inputField.getText().equals("")) {
             edge = new Edge(weight, selectedVertex, vertex);
@@ -322,7 +325,7 @@ public class PannelloPrincipaleGraph implements Initializable {
         selectedVertex.setVicino(vertex);
         vertex.setVicino(selectedVertex);
 
-        Text numberText = new Text(Integer.toString(vertex.getIndiceVertice()));
+        Text numberText = new Text(Integer.toString(vertex.getVertexIndex()));
         numberText.setFill(Color.WHITE);
         numberText.setX(vertexCircle.getCenterX() - 5);
         numberText.setY(vertexCircle.getCenterY() + 5);
@@ -330,7 +333,7 @@ public class PannelloPrincipaleGraph implements Initializable {
 
         pane.getChildren().addAll(vertexCircle, numberText);
 
-        log.appendText("Added vertex " + vertex.getIndiceVertice() + "\n");
+        log.appendText("Added vertex " + vertex.getVertexIndex() + "\n");
 
         vertexCircle.setOnMouseClicked(e -> {
             if (e.isControlDown()) {
@@ -346,7 +349,7 @@ public class PannelloPrincipaleGraph implements Initializable {
                 // Second is dijkstraVertex
             }
             selectedVertex = vertex;
-            log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
+            log.appendText("Vertex " + vertex.getVertexIndex() + "\n");
 
             vertexCircle.setFill(Color.GREEN);
             selectedPallino.setFill(Color.BLUE);
@@ -489,7 +492,7 @@ public class PannelloPrincipaleGraph implements Initializable {
         pane.getChildren().clear();
         log.clear();
 
-        indici = 0;
+        index = 0;
         selectedPallino = null;
         selectedVertex = null;
         graph = new Graph();
@@ -507,7 +510,7 @@ public class PannelloPrincipaleGraph implements Initializable {
         vertexCircle.setCenterX(350);
         vertexCircle.setCenterY(250);
 
-        Vertex vertex = new Vertex(indici++, vertexCircle);
+        Vertex vertex = new Vertex(index++, vertexCircle);
         graph.addVertex(vertex);
 
         Text numberText = new Text("0");
@@ -532,7 +535,7 @@ public class PannelloPrincipaleGraph implements Initializable {
                 // Second is dijkstraVertex
             }
             selectedVertex = vertex;
-            log.appendText("Vertex " + vertex.getIndiceVertice() + "\n");
+            log.appendText("Vertex " + vertex.getVertexIndex() + "\n");
 
             selectedPallino = vertexCircle;
             vertexCircle.setFill(Color.GREEN);

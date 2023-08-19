@@ -10,15 +10,15 @@ import javafx.scene.text.Text;
 
 public class Vertex {
 
-    private int indiceVertice;
+    private int vertexIndex;
     private ArrayList<Vertex> vicini;
     private ArrayList<Line> lines;
     private Circle circle;
     private Map<Line, Text> weights = new HashMap<>();
     private ArrayList<Edge> edges;
 
-    public Vertex(int indiceVertice, Circle circle) {
-        this.indiceVertice = indiceVertice;
+    public Vertex(int vertexIndex, Circle circle) {
+        this.vertexIndex = vertexIndex;
         vicini = new ArrayList<>();
         lines = new ArrayList<>();
         this.circle = circle;
@@ -46,8 +46,8 @@ public class Vertex {
         return this.lines.get(index);
     }
 
-    public int getIndiceVertice() {
-        return this.indiceVertice;
+    public int getVertexIndex() {
+        return this.vertexIndex;
     }
 
     public void setVicino(Vertex vertex) {

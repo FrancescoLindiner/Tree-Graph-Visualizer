@@ -20,7 +20,7 @@ public class GraphAlgorithms {
             distance[i] = Integer.MAX_VALUE;
         }
 
-        distance[selectedVertex.getIndiceVertice()] = 0; // Inizializza la distanza del nodo sorgente a 0
+        distance[selectedVertex.getVertexIndex()] = 0; // Inizializza la distanza del nodo sorgente a 0
 
         for (int i = 0; i < graph.getSize() - 1; i++) {
             System.out.println(graph.getSize());
@@ -35,9 +35,9 @@ public class GraphAlgorithms {
 
                     int weight = e.getWeight();
 
-                    if (distance[v1.getIndiceVertice()] != Integer.MAX_VALUE &&
-                            distance[v1.getIndiceVertice()] + weight < distance[v2.getIndiceVertice()]) {
-                        distance[v2.getIndiceVertice()] = distance[v1.getIndiceVertice()] + weight;
+                    if (distance[v1.getVertexIndex()] != Integer.MAX_VALUE &&
+                            distance[v1.getVertexIndex()] + weight < distance[v2.getVertexIndex()]) {
+                        distance[v2.getVertexIndex()] = distance[v1.getVertexIndex()] + weight;
                     }
                 }
             }
@@ -55,9 +55,9 @@ public class GraphAlgorithms {
 
                 int weight = e.getWeight();
 
-                if (distance[v1.getIndiceVertice()] != Integer.MAX_VALUE &&
-                        distance[v1.getIndiceVertice()] + weight < distance[v2.getIndiceVertice()]) {
-                    System.out.println("Il grafo contiene cicli negativi");
+                if (distance[v1.getVertexIndex()] != Integer.MAX_VALUE &&
+                        distance[v1.getVertexIndex()] + weight < distance[v2.getVertexIndex()]) {
+                    return null;
                 }
             }
         }
@@ -75,10 +75,10 @@ public class GraphAlgorithms {
             predecessors[i] = null;
         }
 
-        distance[selectedVertex.getIndiceVertice()] = 0;
+        distance[selectedVertex.getVertexIndex()] = 0;
 
         PriorityQueue<Vertex> queue = new PriorityQueue<>(
-                Comparator.comparingInt(vertex -> distance[vertex.getIndiceVertice()]));
+                Comparator.comparingInt(vertex -> distance[vertex.getVertexIndex()]));
         queue.add(selectedVertex);
 
         while (!queue.isEmpty()) {
@@ -96,10 +96,10 @@ public class GraphAlgorithms {
                     return null;
                 }
 
-                if (distance[v1.getIndiceVertice()] != Integer.MAX_VALUE &&
-                        distance[v1.getIndiceVertice()] + weight < distance[v2.getIndiceVertice()]) {
-                    distance[v2.getIndiceVertice()] = distance[v1.getIndiceVertice()] + weight;
-                    predecessors[v2.getIndiceVertice()] = v1;
+                if (distance[v1.getVertexIndex()] != Integer.MAX_VALUE &&
+                        distance[v1.getVertexIndex()] + weight < distance[v2.getVertexIndex()]) {
+                    distance[v2.getVertexIndex()] = distance[v1.getVertexIndex()] + weight;
+                    predecessors[v2.getVertexIndex()] = v1;
                     queue.add(v2);
                 }
             }
@@ -110,39 +110,39 @@ public class GraphAlgorithms {
             Vertex currentVertex = graph.getVertex(i);
             while (currentVertex != null) {
                 shortestPath.add(currentVertex);
-                currentVertex = predecessors[currentVertex.getIndiceVertice()];
+                currentVertex = predecessors[currentVertex.getVertexIndex()];
             }
             Collections.reverse(shortestPath);
             paths.add(shortestPath);
         }
 
         log.appendText("--------------------\nDijkstra\nPath:\n");
-        ArrayList<Vertex> shortestPath = paths.get(dijkstraVertex.getIndiceVertice());
+        ArrayList<Vertex> shortestPath = paths.get(dijkstraVertex.getVertexIndex());
         for (Vertex vertex : shortestPath) {
-            log.appendText(vertex.getIndiceVertice() + " ");
+            log.appendText(vertex.getVertexIndex() + " ");
         }
-        log.appendText("\nDistance: " + distance[dijkstraVertex.getIndiceVertice()] + "\n");
+        log.appendText("\nDistance: " + distance[dijkstraVertex.getVertexIndex()] + "\n");
 
         return shortestPath;
 
     }
 
     public Map<String, List<?>> executePrim(Vertex selectedVertex, Graph graph) {
-        ArrayList<Vertex> listaDiVertici = new ArrayList<>();
-        ArrayList<Edge> listaDiArchi = new ArrayList<>();
+        ArrayList<Vertex> vertexList = new ArrayList<>();
+        ArrayList<Edge> edgeList = new ArrayList<>();
 
-        listaDiVertici.add(selectedVertex);
+        vertexList.add(selectedVertex);
 
-        while (listaDiVertici.size() < graph.getSize()) {
+        while (vertexList.size() < graph.getSize()) {
             Edge minEdge = null;
             int minWeight = Integer.MAX_VALUE;
 
-            for (Vertex vertex : listaDiVertici) {
+            for (Vertex vertex : vertexList) {
                 ArrayList<Edge> viciniEdge = vertex.getEdges();
                 for (Edge edge : viciniEdge) {
-                    if ((listaDiVertici.contains(edge.getV1()) && !listaDiVertici.contains(edge.getV2()))
-                            || (!listaDiVertici.contains(edge.getV1()) && listaDiVertici.contains(edge.getV2()))) {
-                        if (!listaDiArchi.contains(edge) && edge.getWeight() < minWeight) {
+                    if ((vertexList.contains(edge.getV1()) && !vertexList.contains(edge.getV2()))
+                            || (!vertexList.contains(edge.getV1()) && vertexList.contains(edge.getV2()))) {
+                        if (!edgeList.contains(edge) && edge.getWeight() < minWeight) {
                             minEdge = edge;
                             minWeight = edge.getWeight();
                         }
@@ -151,86 +151,75 @@ public class GraphAlgorithms {
             }
 
             if (minEdge != null) {
-                listaDiArchi.add(minEdge);
-                if (!listaDiVertici.contains(minEdge.getV1())) {
-                    listaDiVertici.add(minEdge.getV1());
+                edgeList.add(minEdge);
+                if (!vertexList.contains(minEdge.getV1())) {
+                    vertexList.add(minEdge.getV1());
                 } else {
-                    listaDiVertici.add(minEdge.getV2());
+                    vertexList.add(minEdge.getV2());
                 }
             }
         }
 
         Map<String, List<?>> result = new HashMap<>();
-        result.put("archi", listaDiArchi);
-        result.put("vertici", listaDiVertici);
+        result.put("archi", edgeList);
+        result.put("vertici", vertexList);
 
         return result;
     }
 
     public ArrayList<Edge> executeKruskal(Graph graph) {
-        ArrayList<Edge> archiOrdinati = prendiArchiOrdinati(graph);
-        ArrayList<ArrayList<Vertex>> vertexs = new ArrayList<>(); // struttura per contenere gli alberi
-        ArrayList<Edge> mstEdges = new ArrayList<>(); // Archi dell'MST
-        Collections.sort(archiOrdinati);
+        ArrayList<Edge> orderedEdges = getOrderedEdges(graph);
+        ArrayList<ArrayList<Vertex>> vertexs = new ArrayList<>(); // to contain tree
+        ArrayList<Edge> mstEdges = new ArrayList<>(); // edges of the minimum spanning tree
+        Collections.sort(orderedEdges);
 
-        for (Edge edge : archiOrdinati) {
-            ArrayList<Vertex> albero1 = null;
-            ArrayList<Vertex> albero2 = null;
+        for (Edge edge : orderedEdges) {
+            ArrayList<Vertex> tree1 = null;
+            ArrayList<Vertex> tree2 = null;
 
             // Trova gli alberi contenenti i vertici dell'arco
             for (ArrayList<Vertex> tree : vertexs) {
                 if (tree.contains(edge.getV1())) {
-                    albero1 = tree;
+                    tree1 = tree;
                 }
                 if (tree.contains(edge.getV2())) {
-                    albero2 = tree;
+                    tree2 = tree;
                 }
             }
 
-            if (albero1 != albero2) {
-                if (albero1 != null && albero2 != null) {
-                    albero1.addAll(albero2);
-                    vertexs.remove(albero2);
-                } else if (albero1 != null) {
-                    albero1.add(edge.getV2());
-                } else if (albero2 != null) {
-                    albero2.add(edge.getV1());
+            if (tree1 != tree2) {
+                if (tree1 != null && tree2 != null) {
+                    tree1.addAll(tree2);
+                    vertexs.remove(tree2);
+                } else if (tree1 != null) {
+                    tree1.add(edge.getV2());
+                } else if (tree2 != null) {
+                    tree2.add(edge.getV1());
                 } else {
-                    ArrayList<Vertex> nuovoAlbero = new ArrayList<>();
-                    nuovoAlbero.add(edge.getV1());
-                    nuovoAlbero.add(edge.getV2());
-                    vertexs.add(nuovoAlbero);
+                    ArrayList<Vertex> newTree = new ArrayList<>();
+                    newTree.add(edge.getV1());
+                    newTree.add(edge.getV2());
+                    vertexs.add(newTree);
                 }
                 mstEdges.add(edge); // Aggiungi l'arco all'MST
-            } else if (albero1 == null && albero2 == null) {
-                ArrayList<Vertex> nuovoAlbero = new ArrayList<>();
-                nuovoAlbero.add(edge.getV1());
-                nuovoAlbero.add(edge.getV2());
-                vertexs.add(nuovoAlbero);
+            } else if (tree1 == null && tree2 == null) {
+                ArrayList<Vertex> newTree = new ArrayList<>();
+                newTree.add(edge.getV1());
+                newTree.add(edge.getV2());
+                vertexs.add(newTree);
                 mstEdges.add(edge); // Aggiungi l'arco all'MST
 
             }
         }
-        for (ArrayList<Vertex> v : vertexs) {
-            for (Vertex vertex : v) {
-                System.out.print(vertex.getIndiceVertice() + " ");
-            }
-            System.out.println("");
-        }
-        System.out.println(mstEdges.size());
-        for (Edge edge : mstEdges) {
-            System.out.print(edge.getWeight() + " ");
-        }
-        System.out.println(" ");
         return mstEdges;
     }
 
-    private ArrayList<Edge> prendiArchiOrdinati(Graph graph) {
+    private ArrayList<Edge> getOrderedEdges(Graph graph) {
         ArrayList<Edge> edges = new ArrayList<>();
-        HashSet<Edge> uniqueEdges = new HashSet<>(); // Utilizziamo un HashSet per mantenere archi unici
+        HashSet<Edge> uniqueEdges = new HashSet<>(); // HashSet per mantenere archi unici
         for (Vertex v : graph.getGraph()) {
-            ArrayList<Edge> archi = v.getEdges();
-            for (Edge edge : archi) {
+            ArrayList<Edge> edges2 = v.getEdges();
+            for (Edge edge : edges2) {
                 if (uniqueEdges.add(edge)) {
                     // L'arco non era presente nel set, quindi lo aggiungiamo sia al set che
                     // all'elenco

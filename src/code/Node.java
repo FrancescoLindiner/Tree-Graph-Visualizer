@@ -9,21 +9,21 @@ import javafx.scene.text.Text;
 
 public class Node {
 
-    private int indiceNodo;
+    private int indexNode;
     private int nNodes; // number of children
     private Circle circle;
     private ArrayList<Line> lines; // lines incident at the node
     private ArrayList<Node> vicini; //neightbots of the node, includes the father and the children
-    private ArrayList<Node> figli; // children of the node
+    private ArrayList<Node> children; // children of the node
     private Text numberText; // text to insert the index at the center of the circle
 
-    public Node(int indiceNodo, Circle circle) {
-        this.indiceNodo = indiceNodo;
+    public Node(int indexNode, Circle circle) {
+        this.indexNode = indexNode;
         this.circle = circle;
         nNodes = 0;
         lines = new ArrayList<>();
         vicini = new ArrayList<>();
-        figli = new ArrayList<>();
+        children = new ArrayList<>();
     }
 
     public Circle getCircle() {
@@ -31,15 +31,11 @@ public class Node {
     }
 
     public void setFigli(Node figlio) {
-        figli.add(figlio);
+        children.add(figlio);
     }
 
-    public ArrayList<Node> getFigli() {
-        return this.figli;
-    }
-
-    public int getNumFigli() {
-        return this.figli.size();
+    public ArrayList<Node> getChildren() {
+        return this.children;
     }
 
     public void setNumberText(Text numberText) {
@@ -78,7 +74,7 @@ public class Node {
         return vicini.get(index).circle;
     }
 
-    public void set_nNodes() { // to increment the number of children
+    public void set_nNodes() { // to increment the number of childrens
         this.nNodes++;
     }
 
@@ -86,19 +82,19 @@ public class Node {
         return this.nNodes;
     }
 
-    public int getIndiceNodo() {
-        return this.indiceNodo;
+    public int getIndexNode() {
+        return this.indexNode;
     }
 
     @Override
     public String toString() {
-        return "Indice nodo " + indiceNodo;
+        return "Indice nodo " + indexNode;
     }
 
-    public void removeFiglio(Node selectedNode) {
+    public void removeChildren(Node selectedNode) {
         nNodes--;
         lines.remove(selectedNode.getLine(0));
         vicini.remove(selectedNode);
-        figli.remove(selectedNode);
+        children.remove(selectedNode);
     }
 }

@@ -32,10 +32,9 @@ public class Tree {
         Node randomNode = null;
 
         do {
-            int indiceCasuale = rand.nextInt(tree.size());
-            randomNode = tree.get(indiceCasuale);
+            int randomIndex = rand.nextInt(tree.size());
+            randomNode = tree.get(randomIndex);
         } while (randomNode.equals(getRoot()) && randomNode.get_nNode() != 0);
-        System.out.println(randomNode.getIndiceNodo() + "\n\n");
         return randomNode;
     }
 
@@ -66,9 +65,9 @@ public class Tree {
         tree.remove(n);
     }
 
-    public Node getPadre(Node selectedNode) {
+    public Node getFather(Node selectedNode) {
         for (Node node : tree) {
-            ArrayList<Node> figli = node.getFigli();
+            ArrayList<Node> figli = node.getChildren();
             for (Node node2 : figli) {
                 if (node2 == selectedNode) {
                     return node;

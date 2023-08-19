@@ -25,14 +25,14 @@ public class DFS {
 
             Node node = stack.pop();
             if (node != null) {
-                log.appendText("Node visited " + node.getIndiceNodo() + "\n");
+                log.appendText("Node visited " + node.getIndexNode() + "\n");
 
                 node.setColor();
                 
-                ArrayList<Node> figli = node.getFigli();
-                int size = figli.size();
+                ArrayList<Node> children = node.getChildren();
+                int size = children.size();
                 for (int i = size-1; i>=0; i--) { // the loop goes backwards to start the algorithm from the leftmost node
-                    stack.push(figli.get(i));
+                    stack.push(children.get(i));
                 }
                 
             }

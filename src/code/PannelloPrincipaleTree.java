@@ -39,59 +39,58 @@ public class PannelloPrincipaleTree implements Initializable {
     @FXML
     private Slider slider;
 
-    static int indici = 0;
-    private Circle selectedPallino;
+    static int index = 0;
+    private Circle selectedCircle;
     private Node selectedNode;
     Tree tree = new Tree();
     Parent parent;
     Stage stage;
     Scene scene;
     private double mouseX, mouseY; // Store the initial mouse click position
-    static int livello = 0;
 
     DFS dfs = new DFS();
     BFS bfs = new BFS();
 
     public void onStart() {
-        Circle pallino = new Circle(20, Color.BLUE);
-        pallino.setCenterX(350);
-        pallino.setCenterY(40);
+        Circle circle = new Circle(20, Color.BLUE);
+        circle.setCenterX(350);
+        circle.setCenterY(40);
 
-        Node root = new Node(0, pallino);
+        Node root = new Node(0, circle);
         tree.addNode(root);
 
         Text numberText = new Text("0");
         numberText.setFill(Color.WHITE);
-        numberText.setX(pallino.getCenterX() - 5);
-        numberText.setY(pallino.getCenterY() + 5);
+        numberText.setX(circle.getCenterX() - 5);
+        numberText.setY(circle.getCenterY() + 5);
         root.setNumberText(numberText);
-        pane.getChildren().addAll(pallino, numberText);
+        pane.getChildren().addAll(circle, numberText);
 
-        pallino.setOnMouseClicked(event -> {
-            log.appendText("Root " + root.getIndiceNodo() + "\n");
-            pallino.setFill(Color.GREEN);
-            selectedPallino = pallino;
+        circle.setOnMouseClicked(event -> {
+            log.appendText("Root " + root.getIndexNode() + "\n");
+            circle.setFill(Color.GREEN);
+            selectedCircle = circle;
             selectedNode = root;
         });
 
-        pallino.setOnMousePressed(e -> {
-            mouseX = e.getSceneX() - pallino.getCenterX();
-            mouseY = e.getSceneY() - pallino.getCenterY();
+        circle.setOnMousePressed(e -> {
+            mouseX = e.getSceneX() - circle.getCenterX();
+            mouseY = e.getSceneY() - circle.getCenterY();
         });
 
-        pallino.setOnMouseDragged(e -> {
+        circle.setOnMouseDragged(e -> {
             double newCircleX = e.getSceneX() - mouseX;
             double newCircleY = e.getSceneY() - mouseY;
 
-            pallino.setCenterX(newCircleX);
-            pallino.setCenterY(newCircleY);
+            circle.setCenterX(newCircleX);
+            circle.setCenterY(newCircleY);
 
             numberText.setX(newCircleX - 5);
             numberText.setY(newCircleY + 5);
 
             for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
-                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
-                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+                selectedNode.getLine(i).setStartX(selectedCircle.getCenterX());
+                selectedNode.getLine(i).setStartY(selectedCircle.getCenterY());
                 selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
                 selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
             }
@@ -150,7 +149,7 @@ public class PannelloPrincipaleTree implements Initializable {
     }
 
     private void removeNodeAndDescendants(Node node) {
-        ArrayList<Node> children = node.getFigli();
+        ArrayList<Node> children = node.getChildren();
 
         pane.getChildren().remove(node.getCircle());
         pane.getChildren().remove(node.getLine(0));
@@ -161,9 +160,9 @@ public class PannelloPrincipaleTree implements Initializable {
             removeNodeAndDescendants(child);
         }
 
-        Node padre = tree.getPadre(selectedNode);
+        Node padre = tree.getFather(selectedNode);
         if (padre != null) {
-            padre.removeFiglio(selectedNode);
+            padre.removeChildren(selectedNode);
         }
         pane.getChildren().remove(selectedNode.getLine(0));
         pane.getChildren().remove(selectedNode.getCircle());
@@ -173,44 +172,48 @@ public class PannelloPrincipaleTree implements Initializable {
 
     @FXML
     Node buttonInsertNode(ActionEvent event) {
+        if (selectedNode==null) {
+            selectedNode = tree.getRoot();
+            selectedCircle = selectedNode.getCircle();
+        }
         Circle node = new Circle(20, Color.BLUE);
-        Node figlio = new Node(++indici, node);
+        Node children = new Node(++index, node);
 
-        int numFigli = selectedNode.get_nNode();
+        int numChildren = selectedNode.get_nNode();
 
-        tree.addNode(figlio);
-        selectedNode.setFigli(figlio);
+        tree.addNode(children);
+        selectedNode.setFigli(children);
         selectedNode.set_nNodes();
 
-        changePosition(numFigli);
+        changePosition(numChildren);
 
-        Text numberText = new Text(Integer.toString(figlio.getIndiceNodo()));
+        Text numberText = new Text(Integer.toString(children.getIndexNode()));
         numberText.setFill(Color.WHITE);
         numberText.setX(node.getCenterX() - 5);
         numberText.setY(node.getCenterY() + 5);
-        figlio.setNumberText(numberText);
+        children.setNumberText(numberText);
         pane.getChildren().addAll(node, numberText);
 
-        log.appendText("Node " + figlio.getIndiceNodo() + " added\n");
+        log.appendText("Node " + children.getIndexNode() + " added\n");
         node.setOnMouseClicked(e -> {
-            selectedNode = figlio;
-            log.appendText("Index " + figlio.getIndiceNodo() + "\n");
+            selectedNode = children;
+            log.appendText("Index " + children.getIndexNode() + "\n");
 
             node.setFill(Color.GREEN);
-            selectedPallino.setFill(Color.BLUE);
-            selectedPallino = node;
+            selectedCircle.setFill(Color.BLUE);
+            selectedCircle = node;
         });
 
         Line connectionLine = new Line(
-                selectedPallino.getCenterX(), selectedPallino.getCenterY(),
+                selectedCircle.getCenterX(), selectedCircle.getCenterY(),
                 node.getCenterX(), node.getCenterY());
 
         selectedNode.setLine(connectionLine);
-        figlio.setLine(connectionLine);
-        selectedNode.setVicino(figlio);
-        figlio.setVicino(selectedNode);
+        children.setLine(connectionLine);
+        selectedNode.setVicino(children);
+        children.setVicino(selectedNode);
 
-        changePositionLine(figlio);
+        changePositionLine(children);
 
         pane.getChildren().add(connectionLine);
         connectionLine.toBack();
@@ -231,24 +234,24 @@ public class PannelloPrincipaleTree implements Initializable {
             numberText.setY(newCircleY + 5);
 
             for (int i = 0; i < selectedNode.getSizeVicini(); i++) {
-                selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
-                selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+                selectedNode.getLine(i).setStartX(selectedCircle.getCenterX());
+                selectedNode.getLine(i).setStartY(selectedCircle.getCenterY());
                 selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
                 selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
             }
         });
-        return figlio;
+        return children;
     }
 
     private void changePositionLine(Node figlio) {
 
         for (int i = 0; i < selectedNode.getSizeVicini(); i++) { // to move the children
-            selectedNode.getLine(i).setStartX(selectedPallino.getCenterX());
-            selectedNode.getLine(i).setStartY(selectedPallino.getCenterY());
+            selectedNode.getLine(i).setStartX(selectedCircle.getCenterX());
+            selectedNode.getLine(i).setStartY(selectedCircle.getCenterY());
             selectedNode.getLine(i).setEndX(selectedNode.getVicino(i).getCenterX());
             selectedNode.getLine(i).setEndY(selectedNode.getVicino(i).getCenterY());
         }
-        ArrayList<Node> figli = selectedNode.getFigli();
+        ArrayList<Node> figli = selectedNode.getChildren();
         for (Node node : figli) { // per spostare i number text
             node.getNumberText().setX(node.getCircle().getCenterX() - 5);
             node.getNumberText().setY(node.getCircle().getCenterY() + 5);
@@ -267,7 +270,7 @@ public class PannelloPrincipaleTree implements Initializable {
 
     private void changePosition(int numFigli) {
         int x;
-        ArrayList<Node> figli = selectedNode.getFigli();
+        ArrayList<Node> figli = selectedNode.getChildren();
         if (numFigli == 0) {
             x = 0;
         } else {
@@ -289,8 +292,8 @@ public class PannelloPrincipaleTree implements Initializable {
         log.clear();
 
         // reset the variable at the initial state
-        indici = 0;
-        selectedPallino = null;
+        index = 0;
+        selectedCircle = null;
         selectedNode = null;
         tree = new Tree();
 
@@ -308,7 +311,7 @@ public class PannelloPrincipaleTree implements Initializable {
 
         int randomDim = random.nextInt(4) + 3;
         selectedNode = tree.getRoot();
-        selectedPallino = selectedNode.getCircle();
+        selectedCircle = selectedNode.getCircle();
 
         for (int i = 0; i < randomDim; i++) {
             int randomChildren = random.nextInt(3) + 1;
@@ -322,7 +325,7 @@ public class PannelloPrincipaleTree implements Initializable {
             }
             Node node = tree.selectRandomNode();
             selectedNode = node;
-            selectedPallino = selectedNode.getCircle();
+            selectedCircle = selectedNode.getCircle();
         }
     }
 
@@ -336,10 +339,10 @@ public class PannelloPrincipaleTree implements Initializable {
 
         if (n == selectedNode) {
             selectedNode = null;
-            selectedPallino = null;
+            selectedCircle = null;
         }
         for (Node node : tree.getNodes()) {
-            System.out.println(node.getIndiceNodo());
+            System.out.println(node.getIndexNode());
         }
     }
 
